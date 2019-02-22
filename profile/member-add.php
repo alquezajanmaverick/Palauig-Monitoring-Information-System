@@ -91,12 +91,18 @@ if(isset($_POST['fname']) && isset($_FILES["file"])){
                 showFooter:false,
                 overlay:true,
             });
-
-            calendar[0].on('datepicker:date:selected',(cal)=>{
-                console.log(cal.date.format("YYYY-MM-DD"))
+            $('#dob').val(moment().subtract(60,'years').format("YYYY-MM-DD"));
+            calendar.on('select',function(cal){
+                console.log(cal.data.date.start)
+                $('#dob').val(moment(cal.data.date.start).format("YYYY-MM-DD"));
+                $('#age').attr('value',moment().diff(moment(cal.data.date.start).format("YYYY-MM-DD"), 'years'));
             })
 
-            // $('#age').attr('value',moment().diff(calendar.value(), 'years'));
+            $('#age').attr('value',moment().diff($('#dob').val(), 'years'));
+
+            $('#dob').on('change',function(){
+                $('#age').attr('value',moment().diff($(this).val(), 'years'));
+            })
 
             bulmaToast.toast({
                 message: "Hello, <?php echo $_SESSION['fullname']; ?>",
@@ -199,13 +205,13 @@ if(isset($_POST['fname']) && isset($_FILES["file"])){
                             <div class="field column is-6">
                                 <div class="control">
                                     <label for="">Date of Birth:</label>
-                                    <!-- <input name="dob" class="input is-primary dtp is-small" id="dob" type="date" placeholder="Date of Birth:" required> -->
+                                    <input name="dob" class="input is-primary dtp is-small" id="dob" type="date" placeholder="Date of Birth:" required>
                                 </div>
                             </div>
                             <div class="field column is-3">
                                 <div class="control">
                                     <label for="">Age:</label>
-                                    <input name="age" class="input is-primary is-small" is-small type="number" id="age" min="0" max="150" placeholder="Age" required>
+                                    <input name="age" class="input is-primary is-small" is-small type="number" id="age" min="0" max="150" placeholder="Age" readonly>
                                 </div>
                             </div>
                             <div class="field column is-3">
