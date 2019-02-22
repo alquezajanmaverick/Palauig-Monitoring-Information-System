@@ -2,7 +2,8 @@
 require_once('../access.php');
 require_once(ROOT_DIR.'/connector.php');
 require_once(ROOT_DIR.'/encryption.php');
-if(isset($_POST['fname']) && isset($_FILES["file"]["tmp_name"])){
+if(isset($_POST['fname']) && isset($_FILES["file"])){
+    
     $db = new DatabaseConnect();
     $db->query("INSERT INTO `tblmember` (`fname`, `mname`, `lname`, `dob`,`pob`, `age`, `sex`, `civil_status`, `edu_attainment`, `occupation`, `income`, `skills`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
     $db->bind(1,$_POST['fname']);
@@ -39,6 +40,7 @@ if(isset($_POST['fname']) && isset($_FILES["file"]["tmp_name"])){
         $uploadOk = 1;
         $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
         // Check if image file is a actual image or fake image
+        // print_r($_FILES["file"]);
         $check = getimagesize($_FILES["file"]["tmp_name"]);
         if($check) {
             if (file_exists($target_file)) {
@@ -55,15 +57,20 @@ if(isset($_POST['fname']) && isset($_FILES["file"]["tmp_name"])){
             $newfilename = $id['ID'] . '.' . end($temp);
             // upload success
             if(move_uploaded_file($_FILES["file"]["tmp_name"], ROOT_DIR . '/profile/photo/' . $newfilename)){
+                
                 $db->query("INSERT into tblmemberimg(ID,imgurl)VALUES(?,?)");
                 $db->bind(1,$id['ID']);
                 $db->bind(2,ROOT_URL . '/profile/photo/' . $newfilename);
                 $db->execute();
             };
-        }
 
-        // header("Location:".ROOT_URL."/profile/member-add-2.php?ID=".$id['ID']);
+
+            
+            // die();
+            header("Location:".ROOT_URL."/profile/member-add-2.php?ID=".$id['ID']);
+        }
     }
+
 }
 ?>
 

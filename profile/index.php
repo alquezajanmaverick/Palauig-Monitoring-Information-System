@@ -94,6 +94,11 @@ require_once(ROOT_DIR.'/connector.php');
                                 <td class="is-size-7" data-occupation="'+value.occupation+'">'+value.occupation+'</td>\
                                 <td class="is-size-7" data-income="'+value.income+'">'+value.income+'</td>\
                                 <td class="is-size-7" data-skills="'+value.skills+'">'+value.skills+'</td>\
+                                <td><a class="button is-small is-size-7 is-warning" title="Update Member"><span class="icon has-text-white is-small is-left"><i class="fa fa-edit"></i></span></a></td>\
+                                <td>\
+                                    <a class="button is-small is-size-7 is-link" data-button="activate" data-id="'+value.ID+'" title="Activate"><span class="icon is-small is-left"><i class="fa fa-check-square"></i></span></a>\
+                                    <a class="button is-small is-size-7 is-danger" data-button="deceased" data-id="'+value.ID+'" title="Deceased"><span class="icon is-small is-left"><i class="fa fa-power-off"></i></span></a>\
+                                </td>\
                             </tr>\
                             ');
                         })
@@ -124,15 +129,68 @@ require_once(ROOT_DIR.'/connector.php');
                             if($(this).attr("data-status")=='ACTIVE'){
                                 $(this).addClass("has-background-primary");
                                 $(this).addClass("has-text-white");
+                                $('[data-button="activate"]').hide();
+                                $('[data-button="deceased"]').show();
                             }else
                             {
+                                $('[data-button="activate"]').show();
+                                $('[data-button="deceased"]').hide();
                                 $(this).addClass("has-background-danger");
                                 $(this).addClass("has-text-white");
                             }
-                        })
+                        });
+                        
                     }
                 });
                 }
+
+                $('a[data-button="deceased"]').on('click',function(){
+                    var $this = $(this);
+                    $.ajax({
+                        type: "get",
+                        url: "<?php echo ROOT_URL; ?>/profile/set-activation.php?mode=deactivate&ID="+$(this).attr("data-id"),
+                        success: function (response) {
+                            $($this).closest('td').closest('tr').removeClass("has-background-primary");
+                            $($this).closest('td').closest('tr').addClass("has-background-danger");
+
+                            $($this).siblings('a').show();
+                            $($this).hide();
+
+                            bulmaToast.toast({
+                                message: "Record "+response+".",
+                                type: "is-success",
+                                duration: 5000,
+                                dismissible: false,
+                                position: "bottom-right",
+                                animate: { in: "fadeInRight", out: "fadeOutRight" }
+                            });
+                        }
+                    });
+                });
+
+                $('a[data-button="activate"]').on('click',function(){
+                    var $this = $(this);
+                    $.ajax({
+                        type: "get",
+                        url: "<?php echo ROOT_URL; ?>/profile/set-activation.php?mode=activate&ID="+$(this).attr("data-id"),
+                        success: function (response) {
+                            $($this).closest('td').closest('tr').removeClass("has-background-danger");
+                            $($this).closest('td').closest('tr').addClass("has-background-primary");
+
+                            $($this).siblings('a').show();
+                            $($this).hide();
+
+                            bulmaToast.toast({
+                                message: "Record "+response+".",
+                                type: "is-success",
+                                duration: 5000,
+                                dismissible: false,
+                                position: "bottom-right",
+                                animate: { in: "fadeInRight", out: "fadeOutRight" }
+                            });
+                        }
+                    });
+                });
 
                 // $('[data-trigger="search"]').on('click',function(){
                 //     count = getCount(offset,limit,$('#namesearch').val(),$('#statusselect').val());
@@ -204,7 +262,7 @@ require_once(ROOT_DIR.'/connector.php');
         <div class="hero-body">
             <div class="container has-text-centered">
                 <h1 class="title">
-                Palauig Monitoring Information Management System
+                Palauig Monitoring Information System for Senior Citizen
                 </h1>
                 <h2 class="subtitle">
                     Members List
@@ -268,6 +326,7 @@ require_once(ROOT_DIR.'/connector.php');
                                 <th>Occupation</th>
                                 <th>Income</th>
                                 <th>Skills</th>
+                                <th></th>
                             </thead>
                             <tbody id="memberlist">
                             </tbody>
@@ -297,7 +356,7 @@ require_once(ROOT_DIR.'/connector.php');
             <p class="modal-card-title" modal-toggle="name"></p>
             <button class="delete" aria-label="close" onclick="$('[data-modal=\'viewdetail\']').removeClass('is-active')"></button>
             </header>
-            <section class="modal-card-body">
+            <section class="modal-card-body" style="overflow-x: hidden;">
             <!-- Content ... -->
                 <!-- Image -->
                 <section class="hero is-primary">

@@ -35,7 +35,7 @@ if(isset($_POST['username'])){
     <link rel="stylesheet" href="styles.css">
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <script src="scripts/login.js"></script>
-    <title>Palauig Monitoring Information Management System</title>
+    <title>Palauig Monitoring Information System for Senior Citizen</title>
 </head>
 <body style="background-image: url('assets/loginmain.jpg');background-size:cover">
     
