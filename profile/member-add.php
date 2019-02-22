@@ -90,11 +90,13 @@ if(isset($_POST['fname']) && isset($_FILES["file"])){
                 showHeader:true,
                 showFooter:false,
                 overlay:true,
-                onSelect:function(){
-                    console.log("selected")
-                }
             });
-            $('#age').attr('value',moment().diff(calendar.value(), 'years'));
+
+            calendar[0].on('datepicker:date:selected',(cal)=>{
+                console.log(cal.date.format("YYYY-MM-DD"))
+            })
+
+            // $('#age').attr('value',moment().diff(calendar.value(), 'years'));
 
             bulmaToast.toast({
                 message: "Hello, <?php echo $_SESSION['fullname']; ?>",
@@ -197,7 +199,7 @@ if(isset($_POST['fname']) && isset($_FILES["file"])){
                             <div class="field column is-6">
                                 <div class="control">
                                     <label for="">Date of Birth:</label>
-                                    <input name="dob" class="input is-primary dtp is-small" id="dob" type="date" placeholder="Date of Birth:" required>
+                                    <!-- <input name="dob" class="input is-primary dtp is-small" id="dob" type="date" placeholder="Date of Birth:" required> -->
                                 </div>
                             </div>
                             <div class="field column is-3">
@@ -223,7 +225,7 @@ if(isset($_POST['fname']) && isset($_FILES["file"])){
                             <div class="field column is-9">
                                 <div class="control">
                                     <label for="">Place of Birth:</label>
-                                    <input class="input is-primary dtp is-small" name="pob" id="pob" type="text" placeholder="Place of Birth:" required>
+                                    <input class="input is-primary is-small" name="pob" id="pob" type="text" placeholder="Place of Birth:" required>
                                 </div>
                             </div>
                             <div class="field column is-3">
