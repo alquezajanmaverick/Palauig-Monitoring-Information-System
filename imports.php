@@ -12,4 +12,4 @@
     <script src="<?php echo ROOT_URL; ?>/node_modules/bulma-calendar/dist/js/bulma-calendar.min.js"></script>
     <script src="<?php echo ROOT_URL; ?>/node_modules/bulma-toast/dist/bulma-toast.min.js"></script>
     <link rel="stylesheet" href="<?php echo ROOT_URL; ?>/styles.css">
-    <title>Palauig Monitoring Information Management System for Senior Citizen</title>
+    <title>Palauig Monitoring Information System for Senior Citizen</title>
