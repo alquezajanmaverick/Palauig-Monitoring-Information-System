@@ -2,10 +2,11 @@
 require_once('../access.php');
 require_once(ROOT_DIR.'/connector.php');
 require_once(ROOT_DIR.'/encryption.php');
+$db = new DatabaseConnect();
 if(isset($_POST['fname']) && isset($_FILES["file"])){
     
-    $db = new DatabaseConnect();
-    $db->query("INSERT INTO `tblmember` (`fname`, `mname`, `lname`, `dob`,`pob`, `age`, `sex`, `civil_status`, `edu_attainment`, `occupation`, `income`, `skills`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
+
+    $db->query("INSERT INTO `tblmember` (`fname`, `mname`, `lname`, `dob`,`pob`, `age`, `sex`, `civil_status`, `edu_attainment`, `occupation`, `income`, `skills`,`brgyID`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
     $db->bind(1,$_POST['fname']);
     $db->bind(2,$_POST['mname']);
     $db->bind(3,$_POST['lname']);
@@ -18,6 +19,7 @@ if(isset($_POST['fname']) && isset($_FILES["file"])){
     $db->bind(10,$_POST['occupation']);
     $db->bind(11,$_POST['income']);
     $db->bind(12,$_POST['skills']);
+    $db->bind(13,$_POST['brgy']);
     if($db->execute()){
         $db->query("SELECT DISTINCT(LAST_INSERT_ID()) as `ID` FROM tblmember");
         $id = $db->single();
@@ -72,6 +74,8 @@ if(isset($_POST['fname']) && isset($_FILES["file"])){
     }
 
 }
+$db->query("SELECT * FROM tblbrgy");
+$brgy = $db->resultset();
 ?>
 
 <!DOCTYPE html>
@@ -286,6 +290,20 @@ if(isset($_POST['fname']) && isset($_FILES["file"])){
                                 <div class="control">
                                     <label for="">Other Skills:</label>
                                     <input class="input is-primary dtp is-small" name="skills" id="pob" type="text" placeholder="Other Skills" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="columns">
+                            <div class="field column is-12">
+                                <div class="control">
+                                    <label for="">Barangay:</label>
+                                    <div class="select is-primary is-fullwidth is-small">
+                                        <select name="brgy" required>
+                                            <?php foreach($brgy as $b){ ?>
+                                                <option value="<?php echo $b['brgyID']; ?>"><?php echo $b['brgy']; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -15,9 +15,20 @@ require_once(ROOT_DIR.'/connector.php');
             var limit = 10;
             var offset = 0;
             var count =0;
+
+            $.ajax({
+                type: "GET",
+                url: "<?php echo ROOT_URL; ?>/profile/get-brgy.php",
+                success: function (response) {
+                    $.each(JSON.parse(response),function(i,v){
+                        $('#brgyselect').append('<option value="'+v.brgyID+'">'+v.brgy+'</option>');
+                    })
+                }
+            });
+
             $('[data-trigger="search"]').on('click',function(){
 
-                count = getCount(offset,limit,$('#namesearch').val(),$('#statusselect').val());;
+                count = getCount(offset,limit,$('#namesearch').val(),$('#statusselect').val(),$('#brgyselect').val());
                 var offsetcount = Math.round(count / limit);
                 // console.log(offsetcount)
                 var arrpage = [];
@@ -28,9 +39,9 @@ require_once(ROOT_DIR.'/connector.php');
                 }
                 // console.log(arrpage)
                 
-                getData($(this).attr("page-offset"),limit,$('#namesearch').val(),$('#statusselect').val());
+                getData($(this).attr("page-offset"),limit,$('#namesearch').val(),$('#statusselect').val(),$('#brgyselect').val());
 
-                function getCount(xoffset,xlimit,name='',status){
+                function getCount(xoffset,xlimit,name='',status,brgy){
                     var urlAppend = "";
                     if(name!=""){
                         urlAppend +="&name="+name;
@@ -42,6 +53,7 @@ require_once(ROOT_DIR.'/connector.php');
                     }else{
                         urlAppend += "&status=all";
                     }
+                    urlAppend += "&brgy="+brgy;
                     var ctr;
                     $.ajax({
                         type: "GET",
@@ -53,7 +65,7 @@ require_once(ROOT_DIR.'/connector.php');
                     });
                     return ctr;
                 }
-                function getData(xoffset,xlimit,name='',status){
+                function getData(xoffset,xlimit,name='',status,brgy){
                     var urlAppend = "";
                     if(name!=""){
                         urlAppend +="&name="+name;
@@ -65,6 +77,7 @@ require_once(ROOT_DIR.'/connector.php');
                     }else{
                         urlAppend += "&status=all";
                     }
+                        urlAppend += "&brgy="+brgy;
 
                     $.ajax({
                     type: "GET",
@@ -121,7 +134,7 @@ require_once(ROOT_DIR.'/connector.php');
                         $('.pagination a[page-offset="'+offset+'"]').attr("disabled",true)
                         $('.pagination a').on('click',function(){                
                             offset = $(this).attr("page-offset");
-                            getData($(this).attr("page-offset"),limit,$('#namesearch').val(),$('#statusselect').val());
+                            getData($(this).attr("page-offset"),limit,$('#namesearch').val(),$('#statusselect').val(),$('#brgyselect').val());
                         })
                         
 
@@ -304,6 +317,16 @@ require_once(ROOT_DIR.'/connector.php');
                                             </p>
                                         </div>
                                         <div class="field">
+                                            <label for="">Barangay:</label>
+                                            <p class="control is-expanded has-icons-left">
+                                                <div class="select is-small is-fullwidth">
+                                                    <select id="brgyselect">
+                                                        <option value="ALL">ALL</option>
+                                                    </select>
+                                                </div>
+                                            </p>
+                                        </div>
+                                        <div class="field">
                                             <label for="">&nbsp;</label>
                                             <p class="control is-expanded has-icons-left">
                                                 <button data-trigger="search" class="button is-small is-link">Search</button>
@@ -408,20 +431,21 @@ require_once(ROOT_DIR.'/connector.php');
                             <td><strong>Educational Attainment:</strong></td>
                             <td><p data-field="edu_attainment"></p></td>
                         </tr>
-                        </tr>
                         <tr>
                             <td><strong>Occupation:</strong></td>
                             <td><p data-field="occupation"></p></td>
-                        </tr>
                         </tr>
                         <tr>
                             <td><strong>Income:</strong></td>
                             <td><p data-field="income"></p></td>
                         </tr>
-                        </tr>
                         <tr>
                             <td><strong>Skills:</strong></td>
                             <td><p data-field="skills"></p></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Barangay:</strong></td>
+                            <td><p data-field="brgy"></p></td>
                         </tr>
                     </table>
 

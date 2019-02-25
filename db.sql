@@ -33,6 +33,7 @@ DROP VIEW IF EXISTS `memberview`;
 -- Creating temporary table to overcome VIEW dependency errors
 CREATE TABLE `memberview` (
 	`ID` INT(11) NOT NULL,
+	`brgyID` INT(11) NOT NULL,
 	`fname` VARCHAR(50) NOT NULL COLLATE 'utf8_general_ci',
 	`mname` VARCHAR(50) NOT NULL COLLATE 'utf8_general_ci',
 	`lname` VARCHAR(50) NOT NULL COLLATE 'utf8_general_ci',
@@ -45,9 +46,42 @@ CREATE TABLE `memberview` (
 	`occupation` VARCHAR(150) NOT NULL COLLATE 'utf8_general_ci',
 	`income` DECIMAL(10,0) NOT NULL,
 	`skills` TEXT NOT NULL COLLATE 'utf8_general_ci',
+	`date_created` TIMESTAMP NOT NULL,
+	`brgy` VARCHAR(150) NULL COLLATE 'utf8_general_ci',
 	`imgurl` VARCHAR(150) NULL COLLATE 'utf8_general_ci',
 	`status` VARCHAR(50) NULL COLLATE 'utf8_general_ci'
 ) ENGINE=MyISAM;
+
+-- Dumping structure for table dbmmis.tblbrgy
+DROP TABLE IF EXISTS `tblbrgy`;
+CREATE TABLE IF NOT EXISTS `tblbrgy` (
+  `brgyID` int(11) NOT NULL AUTO_INCREMENT,
+  `brgy` varchar(150) NOT NULL,
+  PRIMARY KEY (`brgyID`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+
+-- Dumping data for table dbmmis.tblbrgy: ~18 rows (approximately)
+/*!40000 ALTER TABLE `tblbrgy` DISABLE KEYS */;
+INSERT INTO `tblbrgy` (`brgyID`, `brgy`) VALUES
+	(1, 'Alwa'),
+	(2, 'Bato'),
+	(3, 'Bulawen'),
+	(4, 'Cauyan'),
+	(5, 'East Poblacion'),
+	(6, 'Garreta'),
+	(7, 'Libaba'),
+	(8, 'Liozon'),
+	(9, 'Lipay'),
+	(10, 'Locloc'),
+	(11, 'Macarang'),
+	(12, 'Magalawa'),
+	(13, 'Pangolingan'),
+	(14, 'Salaza'),
+	(15, 'Sto. Niño'),
+	(16, 'Sto. Tomas'),
+	(17, 'San Vicente'),
+	(18, 'West Poblacion');
+/*!40000 ALTER TABLE `tblbrgy` ENABLE KEYS */;
 
 -- Dumping structure for table dbmmis.tblcomposition
 DROP TABLE IF EXISTS `tblcomposition`;
@@ -71,6 +105,7 @@ CREATE TABLE IF NOT EXISTS `tblcomposition` (
 DROP TABLE IF EXISTS `tblmember`;
 CREATE TABLE IF NOT EXISTS `tblmember` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `brgyID` int(11) NOT NULL,
   `fname` varchar(50) NOT NULL,
   `mname` varchar(50) NOT NULL,
   `lname` varchar(50) NOT NULL,
@@ -84,10 +119,12 @@ CREATE TABLE IF NOT EXISTS `tblmember` (
   `income` decimal(10,0) NOT NULL,
   `skills` text NOT NULL,
   `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`ID`),
+  KEY `brgyID` (`brgyID`),
+  CONSTRAINT `FK_tblmember_tblbrgy` FOREIGN KEY (`brgyID`) REFERENCES `tblbrgy` (`brgyID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
--- Dumping data for table dbmmis.tblmember: ~0 rows (approximately)
+-- Dumping data for table dbmmis.tblmember: ~1 rows (approximately)
 /*!40000 ALTER TABLE `tblmember` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tblmember` ENABLE KEYS */;
 
@@ -101,7 +138,7 @@ CREATE TABLE IF NOT EXISTS `tblmembercredentials` (
   CONSTRAINT `FK_tblmembercredentials_tblmember` FOREIGN KEY (`ID`) REFERENCES `tblmember` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Dumping data for table dbmmis.tblmembercredentials: ~0 rows (approximately)
+-- Dumping data for table dbmmis.tblmembercredentials: ~2 rows (approximately)
 /*!40000 ALTER TABLE `tblmembercredentials` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tblmembercredentials` ENABLE KEYS */;
 
@@ -114,7 +151,7 @@ CREATE TABLE IF NOT EXISTS `tblmemberimg` (
   CONSTRAINT `FK_tblmemberimg_tblmember` FOREIGN KEY (`ID`) REFERENCES `tblmember` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Dumping data for table dbmmis.tblmemberimg: ~0 rows (approximately)
+-- Dumping data for table dbmmis.tblmemberimg: ~1 rows (approximately)
 /*!40000 ALTER TABLE `tblmemberimg` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tblmemberimg` ENABLE KEYS */;
 
@@ -140,7 +177,7 @@ CREATE TABLE IF NOT EXISTS `tblmemberstatus` (
   CONSTRAINT `FK_tblmemberstatus_tblmember` FOREIGN KEY (`ID`) REFERENCES `tblmember` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Dumping data for table dbmmis.tblmemberstatus: ~0 rows (approximately)
+-- Dumping data for table dbmmis.tblmemberstatus: ~1 rows (approximately)
 /*!40000 ALTER TABLE `tblmemberstatus` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tblmemberstatus` ENABLE KEYS */;
 
@@ -154,7 +191,7 @@ CREATE TABLE IF NOT EXISTS `tbluser` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
--- Dumping data for table dbmmis.tbluser: ~1 rows (approximately)
+-- Dumping data for table dbmmis.tbluser: ~0 rows (approximately)
 /*!40000 ALTER TABLE `tbluser` DISABLE KEYS */;
 INSERT INTO `tbluser` (`ID`, `username`, `password`, `fullname`) VALUES
 	(1, 'admin', 'admin', 'Administrator');
@@ -172,9 +209,10 @@ LEFT JOIN tblmembercredentials c ON c.ID = m.ID ;
 DROP VIEW IF EXISTS `memberview`;
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `memberview`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `memberview` AS SELECT m.*,i.imgurl,s.`status` from tblmember m
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `memberview` AS SELECT m.*,b.brgy,i.imgurl,s.`status` from tblmember m
 LEFT JOIN tblmemberimg i ON i.ID = m.ID
-LEFT JOIN tblmemberstatus s ON s.ID = m.ID ;
+LEFT JOIN tblmemberstatus s ON s.ID = m.ID 
+LEFT JOIN tblbrgy as b ON b.brgyID = m.brgyID ;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

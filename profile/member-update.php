@@ -9,12 +9,15 @@ if(isset($_GET['ID'])){
     $db->query("SELECT m.*,i.imgurl as 'img' FROM tblmember m LEFT JOIN tblmemberimg i ON i.ID = m.ID  WHERE m.ID = ? LIMIT 1");
     $db->bind(1,$_GET['ID']);
     $member = $db->single();
+
+    $db->query("SELECT * FROM tblbrgy");
+    $brgy = $db->resultset();
 }
 
 
 if(isset($_POST['ID']) ){
     $db = new DatabaseConnect();
-    $db->query("UPDATE `tblmember` SET `fname` = ?, `mname` = ?, `lname` = ?, `dob` = ?,`pob` = ?, `age` = ?, `sex` = ?, `civil_status` = ?, `edu_attainment` = ?, `occupation` = ?, `income` = ?, `skills` = ? WHERE ID = ? LIMIT 1");
+    $db->query("UPDATE `tblmember` SET `fname` = ?, `mname` = ?, `lname` = ?, `dob` = ?,`pob` = ?, `age` = ?, `sex` = ?, `civil_status` = ?, `edu_attainment` = ?, `occupation` = ?, `income` = ?, `skills` = ? , `brgyID` = ? WHERE ID = ? LIMIT 1");
     $db->bind(1,$_POST['fname']);
     $db->bind(2,$_POST['mname']);
     $db->bind(3,$_POST['lname']);
@@ -27,7 +30,8 @@ if(isset($_POST['ID']) ){
     $db->bind(10,$_POST['occupation']);
     $db->bind(11,$_POST['income']);
     $db->bind(12,$_POST['skills']);
-    $db->bind(13,$_POST['ID']);
+    $db->bind(13,$_POST['brgy']);
+    $db->bind(14,$_POST['ID']);
     if($db->execute()){
         $id = $_POST['ID'];
         if(isset($_FILES["file"])){
@@ -301,6 +305,20 @@ if(isset($_POST['ID']) ){
                                 <div class="control">
                                     <label for="">Other Skills:</label>
                                     <input class="input is-primary is-small" name="skills" id="skills" type="text" placeholder="Other Skills" value="<?php echo $member['skills']; ?>" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="columns">
+                            <div class="field column is-12">
+                                <div class="control">
+                                    <label for="">Barangay:</label>
+                                    <div class="select is-primary is-fullwidth is-small">
+                                        <select name="brgy" required>
+                                            <?php foreach($brgy as $b){ ?>
+                                                <option value="<?php echo $b['brgyID']; ?>" <?php echo ($member['brgyID']==$b['brgyID'] ? 'selected="selected"' : 'ss') ?> > <?php echo $b['brgy']; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>

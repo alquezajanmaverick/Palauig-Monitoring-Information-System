@@ -31,7 +31,18 @@ else{
             }else{
                 $strQuery .= "(s.status ='NOT ACTIVE' OR s.status IS NULL) ";
             }
-           
+        }
+        if($_GET['brgy']!='ALL'){
+            if(stripos($strQuery, "WHERE ") == false){
+                $strQuery .= "WHERE ";
+            }
+
+            if(isset($_GET['name']) || $_GET['status'] != 'all'){
+                $strQuery .= "AND (m.brgyID =". $_GET['brgy'] .") ";
+            }else
+            {
+                $strQuery .= "(m.brgyID =". $_GET['brgy'] .") ";
+            }
         }
     }
 
