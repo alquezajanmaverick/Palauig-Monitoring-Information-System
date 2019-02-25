@@ -4,14 +4,6 @@ require_once('../access.php');
 require_once(ROOT_DIR.'/connector.php');
 if(!isset($_GET['ID'])){
     header("Location:". ROOT_URL ."/profile/member-add.php");
-}else{
-    $db = new DatabaseConnect();
-    $db->query("SELECT COUNT(ID) as ID FROM tblmember WHERE ID = ?");
-    $db->bind(1,$_GET['ID']);
-    $count = $db->single();
-    if($count['ID']<=0){
-        header("Location:". ROOT_URL ."/profile/member-add.php");
-    }
 }
 ?>
 
@@ -79,49 +71,19 @@ if(!isset($_GET['ID'])){
 
         })
     </script>
-    <style>
-        #printarea{
-                display:none;
-            }
-        @media print{
-            body *{
-                display:none;
-                }
-            #printarea, #printarea *{
-                display:block !important;
-            }
-        }
-    </style>
 </head>
 <body>
     <?php include(ROOT_DIR."/header.php"); ?>
-
-
-    <div id="printarea" class="card is-size-4 column is-8" style="border: 3px hsl(0, 0%, 29%) dashed;">
-        <div class="card-content">
-            <table>
-                <tr>
-                    <td><strong>USERNAME:&nbsp;</strong></td>
-                    <td><p id="usernameprint"></p></td>
-                </tr>
-                <tr>
-                    <td><strong>PASSWORD:&nbsp;</strong></td>
-                    <td><p id="passwordprint"></p></td>
-                </tr>
-            </table>
-            <p class="is-size-7 has-text-info">*** This will be used as unique credential to access your personal details.</p>
-        </div>
-    </div>
 
 
     <section class="hero is-medium is-primary is-bold">
         <div class="hero-body">
             <div class="container has-text-centered">
                 <h1 class="title">
-                Palauig Monitoring  and Information Management System
+                Palauig Monitoring and Information Management System
                 </h1>
                 <h2 class="subtitle">
-                    Add New Member
+                    Update Relationship Composition
                 </h2>
                 
                 <div class="steps" id="stepsDemo">

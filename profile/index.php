@@ -94,7 +94,7 @@ require_once(ROOT_DIR.'/connector.php');
                                 <td class="is-size-7" data-occupation="'+value.occupation+'">'+value.occupation+'</td>\
                                 <td class="is-size-7" data-income="'+value.income+'">'+value.income+'</td>\
                                 <td class="is-size-7" data-skills="'+value.skills+'">'+value.skills+'</td>\
-                                <td><a class="button is-small is-size-7 is-warning" title="Update Member"><span class="icon has-text-white is-small is-left"><i class="fa fa-edit"></i></span></a></td>\
+                                <td><a href="<?php echo ROOT_URL; ?>/profile/member-update.php?ID='+value.ID+'" class="button is-small is-size-7 is-warning" title="Update Member"><span class="icon has-text-white is-small is-left"><i class="fa fa-edit"></i></span></a></td>\
                                 <td>\
                                     <a class="button is-small is-size-7 is-link" data-button="activate" data-id="'+value.ID+'" title="Activate"><span class="icon is-small is-left"><i class="fa fa-check-square"></i></span></a>\
                                     <a class="button is-small is-size-7 is-danger" data-button="deceased" data-id="'+value.ID+'" title="Deceased"><span class="icon is-small is-left"><i class="fa fa-power-off"></i></span></a>\
@@ -129,12 +129,12 @@ require_once(ROOT_DIR.'/connector.php');
                             if($(this).attr("data-status")=='ACTIVE'){
                                 $(this).addClass("has-background-primary");
                                 $(this).addClass("has-text-white");
-                                $('[data-button="activate"]').hide();
-                                $('[data-button="deceased"]').show();
+                                $(this).find('[data-button="activate"]').hide();
+                                $(this).find('[data-button="deceased"]').show();
                             }else
                             {
-                                $('[data-button="activate"]').show();
-                                $('[data-button="deceased"]').hide();
+                                $(this).find('[data-button="activate"]').show();
+                                $(this).find('[data-button="deceased"]').hide();
                                 $(this).addClass("has-background-danger");
                                 $(this).addClass("has-text-white");
                             }
@@ -262,7 +262,7 @@ require_once(ROOT_DIR.'/connector.php');
         <div class="hero-body">
             <div class="container has-text-centered">
                 <h1 class="title">
-                Palauig Monitoring Information System for Senior Citizen
+                Palauig Monitoring and Information System for Senior Citizen
                 </h1>
                 <h2 class="subtitle">
                     Members List

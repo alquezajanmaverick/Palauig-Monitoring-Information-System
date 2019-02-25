@@ -63,11 +63,8 @@ CREATE TABLE IF NOT EXISTS `tblcomposition` (
   CONSTRAINT `FK_tblcomposition_tblmember` FOREIGN KEY (`ID`) REFERENCES `tblmember` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Dumping data for table dbmmis.tblcomposition: ~2 rows (approximately)
+-- Dumping data for table dbmmis.tblcomposition: ~0 rows (approximately)
 /*!40000 ALTER TABLE `tblcomposition` DISABLE KEYS */;
-INSERT INTO `tblcomposition` (`ID`, `name`, `relationship`, `c_age`, `c_civil_status`, `c_occupation`, `c_income`) VALUES
-	(54, 'Karla Avecilla', 'Daughter', 26, 'SIngle', 'None', 0),
-	(54, 'Azazel Alqueza', 'Daughter', 8, 'Single', 'None', 0);
 /*!40000 ALTER TABLE `tblcomposition` ENABLE KEYS */;
 
 -- Dumping structure for table dbmmis.tblmember
@@ -88,16 +85,10 @@ CREATE TABLE IF NOT EXISTS `tblmember` (
   `skills` text NOT NULL,
   `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8;
 
--- Dumping data for table dbmmis.tblmember: ~4 rows (approximately)
+-- Dumping data for table dbmmis.tblmember: ~0 rows (approximately)
 /*!40000 ALTER TABLE `tblmember` DISABLE KEYS */;
-INSERT INTO `tblmember` (`ID`, `fname`, `mname`, `lname`, `dob`, `pob`, `age`, `sex`, `civil_status`, `edu_attainment`, `occupation`, `income`, `skills`, `date_created`) VALUES
-	(54, 'Jan Maverick', 'Ordoña', 'Alqueza', '0000-00-00', 'Ramon Magsaysay Memorial Hospital', 60, 'male', 'Single', 'College Graduate', 'Web Developer', 15000, 'Carpenter', '2019-02-21 18:43:04'),
-	(55, 'asda', 'sad', 'sadsad', '0000-00-00', 'RMTU', 60, 'male', 'Single', 'High School Graduate', 'sdada', 0, 'Carpenter', '2019-02-21 18:45:07'),
-	(56, 'asdad', 'asdas', 'asdasd', '0000-00-00', 'adsad', 60, 'male', 'Single', 'Elementary Graduate', 'asdasd', 3, 'asd', '2019-02-21 19:06:40'),
-	(57, 'asdad', 'asdas', 'asdasd', '0000-00-00', 'adsad', 60, 'male', 'Single', 'Elementary Graduate', 'asdasd', 3, 'asd', '2019-02-21 19:10:00'),
-	(58, 'asdsadasdas', 'asdad', 'asdasd', '0000-00-00', 'Ramon Magsaysay Memorial Hospital', 60, 'male', 'Single', 'Elementary Graduate', 'Web Developer', 1, 'asdsd', '2019-02-21 19:10:14');
 /*!40000 ALTER TABLE `tblmember` ENABLE KEYS */;
 
 -- Dumping structure for table dbmmis.tblmembercredentials
@@ -110,14 +101,8 @@ CREATE TABLE IF NOT EXISTS `tblmembercredentials` (
   CONSTRAINT `FK_tblmembercredentials_tblmember` FOREIGN KEY (`ID`) REFERENCES `tblmember` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Dumping data for table dbmmis.tblmembercredentials: ~4 rows (approximately)
+-- Dumping data for table dbmmis.tblmembercredentials: ~0 rows (approximately)
 /*!40000 ALTER TABLE `tblmembercredentials` DISABLE KEYS */;
-INSERT INTO `tblmembercredentials` (`ID`, `userID`, `password`) VALUES
-	(54, 'JanMaverickAlqueza', '2tD$5Nkr'),
-	(55, 'asdasadsad', '@SVVct6d'),
-	(56, 'asdadasdasd', 'ckE4qH%z'),
-	(57, 'asdadasdasd', 'C*c!s49Q'),
-	(58, 'asdsadasdasasdasd', '6S*ptKD6');
 /*!40000 ALTER TABLE `tblmembercredentials` ENABLE KEYS */;
 
 -- Dumping structure for table dbmmis.tblmemberimg
@@ -129,11 +114,8 @@ CREATE TABLE IF NOT EXISTS `tblmemberimg` (
   CONSTRAINT `FK_tblmemberimg_tblmember` FOREIGN KEY (`ID`) REFERENCES `tblmember` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Dumping data for table dbmmis.tblmemberimg: ~1 rows (approximately)
+-- Dumping data for table dbmmis.tblmemberimg: ~0 rows (approximately)
 /*!40000 ALTER TABLE `tblmemberimg` DISABLE KEYS */;
-INSERT INTO `tblmemberimg` (`ID`, `imgurl`) VALUES
-	(56, '/mmis/profile/photo/56.png'),
-	(57, '/mmis/profile/photo/57.png');
 /*!40000 ALTER TABLE `tblmemberimg` ENABLE KEYS */;
 
 -- Dumping structure for table dbmmis.tblmemberpublicid
@@ -158,14 +140,8 @@ CREATE TABLE IF NOT EXISTS `tblmemberstatus` (
   CONSTRAINT `FK_tblmemberstatus_tblmember` FOREIGN KEY (`ID`) REFERENCES `tblmember` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Dumping data for table dbmmis.tblmemberstatus: ~4 rows (approximately)
+-- Dumping data for table dbmmis.tblmemberstatus: ~0 rows (approximately)
 /*!40000 ALTER TABLE `tblmemberstatus` DISABLE KEYS */;
-INSERT INTO `tblmemberstatus` (`ID`, `status`) VALUES
-	(54, 'ACTIVE'),
-	(55, 'ACTIVE'),
-	(56, 'ACTIVE'),
-	(57, 'ACTIVE'),
-	(58, 'ACTIVE');
 /*!40000 ALTER TABLE `tblmemberstatus` ENABLE KEYS */;
 
 -- Dumping structure for table dbmmis.tbluser
@@ -178,10 +154,10 @@ CREATE TABLE IF NOT EXISTS `tbluser` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
--- Dumping data for table dbmmis.tbluser: ~0 rows (approximately)
+-- Dumping data for table dbmmis.tbluser: ~1 rows (approximately)
 /*!40000 ALTER TABLE `tbluser` DISABLE KEYS */;
 INSERT INTO `tbluser` (`ID`, `username`, `password`, `fullname`) VALUES
-	(1, 'admin', 'admin', 'Mavs Alqueza');
+	(1, 'admin', 'admin', 'Administrator');
 /*!40000 ALTER TABLE `tbluser` ENABLE KEYS */;
 
 -- Dumping structure for view dbmmis.credentialview

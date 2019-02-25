@@ -121,7 +121,7 @@ if(isset($_POST['fname']) && isset($_FILES["file"])){
         <div class="hero-body">
             <div class="container has-text-centered">
                 <h1 class="title">
-                Palauig Monitoring Information Management System
+                Palauig Monitoring and Information Management System
                 </h1>
                 <h2 class="subtitle">
                     Add New Member
@@ -219,8 +219,8 @@ if(isset($_POST['fname']) && isset($_FILES["file"])){
                                     <label for="">Sex:</label>
                                     <div class="select is-primary is-fullwidth is-small" required>
                                         <select name="sex">
-                                            <option value="male">Male</option>
-                                            <option value="female">Female</option>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
                                         </select>
                                     </div>
                                 </div>
@@ -267,7 +267,7 @@ if(isset($_POST['fname']) && isset($_FILES["file"])){
                             <div class="field column is-12 is-small">
                                 <div class="control">
                                     <label for="">Occupation:</label>
-                                    <input class="input is-primary dtp" name="occupation" id="pob" type="text" placeholder="Occupation">
+                                    <input class="input is-primary dtp" name="occupation" id="occupation" type="text" placeholder="Occupation">
                                 </div>
                             </div>
                         </div>
