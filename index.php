@@ -38,7 +38,6 @@ if(isset($_POST['username'])){
     <title>Palauig Monitoring and Information System for Senior Citizen</title>
 </head>
 <body style="background-image: url('assets/loginmain.jpg');background-size:cover">
-    
     <div class="login-bg is-desktop">
         <section>
             <div class="columns">
