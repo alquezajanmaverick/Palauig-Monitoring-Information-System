@@ -12,4 +12,6 @@
     <script src="<?php echo ROOT_IMPORT; ?>/node_modules/bulma-calendar/dist/js/bulma-calendar.min.js"></script>
     <script src="<?php echo ROOT_IMPORT; ?>/node_modules/bulma-toast/dist/bulma-toast.min.js"></script>
     <link rel="stylesheet" href="<?php echo ROOT_URL; ?>/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gojs/2.0.4/go-debug.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/gojs/2.0.4/go-debug.js"></script> -->
     <title>Palauig Monitoring and Information System for Senior Citizen</title>
