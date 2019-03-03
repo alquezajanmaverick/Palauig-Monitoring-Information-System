@@ -33,7 +33,7 @@
 
 <nav class="navbar is-transparent has-background-dark is-fixed-top">
         <div class="navbar-brand ">
-            <a class="navbar-item" href="https://bulma.io">
+            <a class="navbar-item" href="#">
             
             </a>
             <div class="navbar-burger burger" data-target="navbarExampleTransparentExample">
@@ -53,17 +53,17 @@
                 Members
                 </a>
                 <div class="navbar-dropdown is-boxed">
-                <a class="navbar-item " href="<?php echo ROOT_URL.'/profile/member-add.php'; ?>">
-                    Add New
-                </a>
-                <a class="navbar-item " data-modal="credential" href="#">
-                    Credential Retrieval
-                </a>
+                    <a class="navbar-item " href="<?php echo ROOT_URL.'/profile/member-add.php'; ?>">
+                        Add New
+                    </a>
+                    <a class="navbar-item " data-modal="credential" href="#">
+                        Credential Retrieval
+                    </a>
                 </div>
             </div>
-            </div>
+        </div>
         
-            <div class="navbar-end">
+        <div class="navbar-end">
             <div class="navbar-item">
                 <div class="field is-grouped">
                 <p class="control is-vertical-center has-text-white">
@@ -79,7 +79,7 @@
                 </p>
                 </div>
             </div>
-            </div>
+        </div>
         </div>
     </nav>
 
