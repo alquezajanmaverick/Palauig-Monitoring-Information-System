@@ -13,9 +13,9 @@
 
 
 -- Dumping database structure for dbmmis
-DROP DATABASE IF EXISTS `dbmmis`;
-CREATE DATABASE IF NOT EXISTS `dbmmis` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `dbmmis`;
+-- DROP DATABASE IF EXISTS `dbmmis`;
+-- CREATE DATABASE IF NOT EXISTS `dbmmis` /*!40100 DEFAULT CHARACTER SET utf8 */;
+
 
 -- Dumping structure for view dbmmis.credentialview
 DROP VIEW IF EXISTS `credentialview`;
