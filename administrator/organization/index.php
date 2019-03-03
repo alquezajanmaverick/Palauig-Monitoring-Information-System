@@ -32,7 +32,7 @@ require_once('../connector.php');
             <div class="column is-1"></div>
             <div class="column is-10">
                 <div class="box">
-                <div id="gochart" class="is-fullwidth" style="height:600px; background-color: #DAE4E4;"></div>
+                <div id="gochart" class="is-fullwidth" style="height:600px;"></div>
                 
                 </div>
             </div>
@@ -55,7 +55,7 @@ require_once('../connector.php');
         // the template we defined earlier
         myDiagram.nodeTemplate =
         chart(go.Node, "Horizontal",
-            { background: "white" },
+            { background: "#0097a7" },
             
         
           // a table to contain the different parts of the node
@@ -77,11 +77,11 @@ require_once('../connector.php');
             // new go.Binding("source")),
 
             chart(go.TextBlock,
-            { row:0,column:1,columnSpan: 2, margin: new go.Margin(10, 10, 0, 0), stroke: "gray", font: "bold 13px sans-serif", alignment: go.Spot.BottomLeft  },
+            { row:0,column:1,columnSpan: 2, margin: new go.Margin(10, 10, 0, 0), stroke: "#fafafa", font: "bold 13px sans-serif", alignment: go.Spot.BottomLeft  },
             new go.Binding("text", "name")),
 
             chart(go.TextBlock,
-            { row:1,column:1,columnSpan: 2, margin: new go.Margin(10, 10, 0, 0), stroke:'gray', font: "13px sans-serif",alignment: go.Spot.TopLeft },
+            { row:1,column:1,columnSpan: 2, margin: new go.Margin(10, 10, 0, 0), stroke:'#fafafa', font: "13px sans-serif",alignment: go.Spot.TopLeft },
             new go.Binding("text","title")),
           ),
         );
