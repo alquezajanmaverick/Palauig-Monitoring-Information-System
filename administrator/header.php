@@ -64,6 +64,9 @@
             <a class="navbar-item  has-text-white " href="<?php echo ROOT_URL.'/organization'; ?>">
                 Organization
             </a>
+            <a class="navbar-item  has-text-white " href="<?php echo ROOT_URL.'/barangays'; ?>">
+                Barangays
+            </a>
         </div>
         
         <div class="navbar-end">
