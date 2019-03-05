@@ -67,8 +67,11 @@ if(isset($_POST['fname']) && isset($_FILES["file"])){
             };
 
 
+            $db->query("INSERT INTO tblmembercreatedby(memberID,userID,created_at)VALUES(?,?,NOW())");
+            $db->bind(1,$id['ID']);
+            $db->bind(2,$_SESSION['ID']);
+            $db->execute();
             
-            // die();
             header("Location:".ROOT_URL."/profile/member-add-2.php?ID=".$id['ID']);
         }
     }
