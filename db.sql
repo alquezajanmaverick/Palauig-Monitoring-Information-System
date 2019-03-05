@@ -2,7 +2,7 @@
 -- Host:                         127.0.0.1
 -- Server version:               10.1.35-MariaDB - mariadb.org binary distribution
 -- Server OS:                    Win32
--- HeidiSQL Version:             9.5.0.5196
+-- HeidiSQL Version:             10.1.0.5464
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -13,9 +13,9 @@
 
 
 -- Dumping database structure for dbmmis
--- DROP DATABASE IF EXISTS `dbmmis`;
--- CREATE DATABASE IF NOT EXISTS `dbmmis` /*!40100 DEFAULT CHARACTER SET utf8 */;
-
+DROP DATABASE IF EXISTS `dbmmis`;
+CREATE DATABASE IF NOT EXISTS `dbmmis` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `dbmmis`;
 
 -- Dumping structure for view dbmmis.credentialview
 DROP VIEW IF EXISTS `credentialview`;
@@ -60,47 +60,24 @@ CREATE TABLE IF NOT EXISTS `tblbrgy` (
   PRIMARY KEY (`brgyID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 
--- Dumping data for table dbmmis.tblbrgy: ~18 rows (approximately)
-/*!40000 ALTER TABLE `tblbrgy` DISABLE KEYS */;
-INSERT INTO `tblbrgy` (`brgyID`, `brgy`) VALUES
-	(1, 'Alwa'),
-	(2, 'Bato'),
-	(3, 'Bulawen'),
-	(4, 'Cauyan'),
-	(5, 'East Poblacion'),
-	(6, 'Garreta'),
-	(7, 'Libaba'),
-	(8, 'Liozon'),
-	(9, 'Lipay'),
-	(10, 'Locloc'),
-	(11, 'Macarang'),
-	(12, 'Magalawa'),
-	(13, 'Pangolingan'),
-	(14, 'Salaza'),
-	(15, 'Sto. Niño'),
-	(16, 'Sto. Tomas'),
-	(17, 'San Vicente'),
-	(18, 'West Poblacion');
-/*!40000 ALTER TABLE `tblbrgy` ENABLE KEYS */;
-
+-- Data exporting was unselected.
 -- Dumping structure for table dbmmis.tblcomposition
 DROP TABLE IF EXISTS `tblcomposition`;
 CREATE TABLE IF NOT EXISTS `tblcomposition` (
   `ID` int(11) DEFAULT NULL,
+  `compoID` int(11) NOT NULL AUTO_INCREMENT,
   `name` text NOT NULL,
   `relationship` varchar(150) NOT NULL,
   `c_age` tinyint(4) NOT NULL,
   `c_civil_status` varchar(50) NOT NULL,
   `c_occupation` varchar(150) NOT NULL,
   `c_income` decimal(10,0) NOT NULL,
+  PRIMARY KEY (`compoID`),
   KEY `ID` (`ID`),
   CONSTRAINT `FK_tblcomposition_tblmember` FOREIGN KEY (`ID`) REFERENCES `tblmember` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 
--- Dumping data for table dbmmis.tblcomposition: ~0 rows (approximately)
-/*!40000 ALTER TABLE `tblcomposition` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tblcomposition` ENABLE KEYS */;
-
+-- Data exporting was unselected.
 -- Dumping structure for table dbmmis.tblmember
 DROP TABLE IF EXISTS `tblmember`;
 CREATE TABLE IF NOT EXISTS `tblmember` (
@@ -124,10 +101,7 @@ CREATE TABLE IF NOT EXISTS `tblmember` (
   CONSTRAINT `FK_tblmember_tblbrgy` FOREIGN KEY (`brgyID`) REFERENCES `tblbrgy` (`brgyID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
--- Dumping data for table dbmmis.tblmember: ~1 rows (approximately)
-/*!40000 ALTER TABLE `tblmember` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tblmember` ENABLE KEYS */;
-
+-- Data exporting was unselected.
 -- Dumping structure for table dbmmis.tblmembercredentials
 DROP TABLE IF EXISTS `tblmembercredentials`;
 CREATE TABLE IF NOT EXISTS `tblmembercredentials` (
@@ -138,10 +112,7 @@ CREATE TABLE IF NOT EXISTS `tblmembercredentials` (
   CONSTRAINT `FK_tblmembercredentials_tblmember` FOREIGN KEY (`ID`) REFERENCES `tblmember` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Dumping data for table dbmmis.tblmembercredentials: ~2 rows (approximately)
-/*!40000 ALTER TABLE `tblmembercredentials` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tblmembercredentials` ENABLE KEYS */;
-
+-- Data exporting was unselected.
 -- Dumping structure for table dbmmis.tblmemberimg
 DROP TABLE IF EXISTS `tblmemberimg`;
 CREATE TABLE IF NOT EXISTS `tblmemberimg` (
@@ -151,10 +122,7 @@ CREATE TABLE IF NOT EXISTS `tblmemberimg` (
   CONSTRAINT `FK_tblmemberimg_tblmember` FOREIGN KEY (`ID`) REFERENCES `tblmember` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Dumping data for table dbmmis.tblmemberimg: ~1 rows (approximately)
-/*!40000 ALTER TABLE `tblmemberimg` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tblmemberimg` ENABLE KEYS */;
-
+-- Data exporting was unselected.
 -- Dumping structure for table dbmmis.tblmemberpublicid
 DROP TABLE IF EXISTS `tblmemberpublicid`;
 CREATE TABLE IF NOT EXISTS `tblmemberpublicid` (
@@ -164,10 +132,7 @@ CREATE TABLE IF NOT EXISTS `tblmemberpublicid` (
   CONSTRAINT `FK_tblmemberpublicID_tblmember` FOREIGN KEY (`ID`) REFERENCES `tblmember` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Dumping data for table dbmmis.tblmemberpublicid: ~0 rows (approximately)
-/*!40000 ALTER TABLE `tblmemberpublicid` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tblmemberpublicid` ENABLE KEYS */;
-
+-- Data exporting was unselected.
 -- Dumping structure for table dbmmis.tblmemberstatus
 DROP TABLE IF EXISTS `tblmemberstatus`;
 CREATE TABLE IF NOT EXISTS `tblmemberstatus` (
@@ -177,10 +142,7 @@ CREATE TABLE IF NOT EXISTS `tblmemberstatus` (
   CONSTRAINT `FK_tblmemberstatus_tblmember` FOREIGN KEY (`ID`) REFERENCES `tblmember` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Dumping data for table dbmmis.tblmemberstatus: ~1 rows (approximately)
-/*!40000 ALTER TABLE `tblmemberstatus` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tblmemberstatus` ENABLE KEYS */;
-
+-- Data exporting was unselected.
 -- Dumping structure for table dbmmis.tbluser
 DROP TABLE IF EXISTS `tbluser`;
 CREATE TABLE IF NOT EXISTS `tbluser` (
@@ -191,12 +153,7 @@ CREATE TABLE IF NOT EXISTS `tbluser` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
--- Dumping data for table dbmmis.tbluser: ~0 rows (approximately)
-/*!40000 ALTER TABLE `tbluser` DISABLE KEYS */;
-INSERT INTO `tbluser` (`ID`, `username`, `password`, `fullname`) VALUES
-	(1, 'admin', 'admin', 'Administrator');
-/*!40000 ALTER TABLE `tbluser` ENABLE KEYS */;
-
+-- Data exporting was unselected.
 -- Dumping structure for view dbmmis.credentialview
 DROP VIEW IF EXISTS `credentialview`;
 -- Removing temporary table and create final VIEW structure
