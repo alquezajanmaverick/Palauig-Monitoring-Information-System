@@ -75,7 +75,27 @@ CREATE TABLE IF NOT EXISTS `tblcomposition` (
   PRIMARY KEY (`compoID`),
   KEY `ID` (`ID`),
   CONSTRAINT `FK_tblcomposition_tblmember` FOREIGN KEY (`ID`) REFERENCES `tblmember` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+-- Dumping structure for table dbmmis.tblloggedinsenior
+DROP TABLE IF EXISTS `tblloggedinsenior`;
+CREATE TABLE IF NOT EXISTS `tblloggedinsenior` (
+  `userID` int(11) DEFAULT NULL,
+  `datelogged` datetime DEFAULT NULL,
+  KEY `userID` (`userID`),
+  CONSTRAINT `FK_tblloggedinsenior_tblmember` FOREIGN KEY (`userID`) REFERENCES `tblmember` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+-- Dumping structure for table dbmmis.tblloggedinuser
+DROP TABLE IF EXISTS `tblloggedinuser`;
+CREATE TABLE IF NOT EXISTS `tblloggedinuser` (
+  `userID` int(11) DEFAULT NULL,
+  `datelogged` datetime DEFAULT NULL,
+  KEY `userID` (`userID`),
+  CONSTRAINT `FK_tblloggedin_tbluser` FOREIGN KEY (`userID`) REFERENCES `tbluser` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table dbmmis.tblmember
@@ -99,7 +119,22 @@ CREATE TABLE IF NOT EXISTS `tblmember` (
   PRIMARY KEY (`ID`),
   KEY `brgyID` (`brgyID`),
   CONSTRAINT `FK_tblmember_tblbrgy` FOREIGN KEY (`brgyID`) REFERENCES `tblbrgy` (`brgyID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+-- Dumping structure for table dbmmis.tblmembercreatedby
+DROP TABLE IF EXISTS `tblmembercreatedby`;
+CREATE TABLE IF NOT EXISTS `tblmembercreatedby` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `memberID` int(11) NOT NULL,
+  `userID` int(11) NOT NULL,
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `memberID` (`memberID`),
+  KEY `userID` (`userID`),
+  CONSTRAINT `FK_tblmembercreateby_tblmember` FOREIGN KEY (`memberID`) REFERENCES `tblmember` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_tblmembercreateby_tbluser` FOREIGN KEY (`userID`) REFERENCES `tbluser` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table dbmmis.tblmembercredentials
@@ -141,6 +176,16 @@ CREATE TABLE IF NOT EXISTS `tblmemberstatus` (
   KEY `ID` (`ID`),
   CONSTRAINT `FK_tblmemberstatus_tblmember` FOREIGN KEY (`ID`) REFERENCES `tblmember` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+-- Dumping structure for table dbmmis.tblsuperuser
+DROP TABLE IF EXISTS `tblsuperuser`;
+CREATE TABLE IF NOT EXISTS `tblsuperuser` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(150) NOT NULL,
+  `password` varchar(150) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table dbmmis.tbluser
