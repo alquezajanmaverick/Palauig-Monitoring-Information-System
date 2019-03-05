@@ -1,3 +1,23 @@
+<?php
+    session_start();
+    session_destroy();
+    require_once("connector.php");
+    if(isset($_POST['username'])){
+        $db = new DatabaseConnect();
+        $db->query("SELECT m.* FROM tblmembercredentials as c LEFT JOIN tblmember as m ON m.ID = c.ID WHERE c.userID = BINARY(?) AND c.password = BINARY(?)");
+        $db->bind(1,$_POST['username']);
+        $db->bind(2,$_POST['password']);
+        $x = $db->single();
+        $r = $db->rowCount();
+        
+        if($r>0){
+            session_start();
+            $_SESSION['ID'] = $x['ID'];
+            $_SESSION['name'] = $x['fname'].' '.$x['lname'];
+            header('Location:member-page.php');
+        }
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,17 +48,17 @@
                     <h1 class="title has-text-centered">
                         Login
                     </h1>
-                    <form>
+                    <form method="POST">
                         <div class="field">
                             <label for="">Username</label>
                             <div class="control">
-                                <input type="text" class="input">
+                                <input type="text" name="username" class="input">
                             </div>
                         </div>
                         <div class="field">
                         <label for="">Password</label>
                             <div class="control">
-                                <input type="password" class="input">
+                                <input type="password" name="password" class="input">
                             </div>
                         </div>
                         <div class="field">

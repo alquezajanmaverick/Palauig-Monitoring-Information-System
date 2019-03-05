@@ -17,6 +17,8 @@ if(!isset($_GET['ID'])){
 
     <script>
         $(document).ready(function(){
+            var newData = [];
+
             $.ajax({
                 type: "get",
                 url: "<?php echo ROOT_URL; ?>/profile/get-credentials.php?ID=<?php echo $_GET['ID']; ?>",
@@ -27,18 +29,21 @@ if(!isset($_GET['ID'])){
                 }
             });
 
-            $.ajax({
+            refreshUI();
+            function refreshUI(){
+                $.ajax({
                 type: "get",
                 url: "get-composition.php?ID=<?php echo $_GET['ID']; ?>",
                 dataType: "json",
                 success: function (response) {
+                    $('tr[data-type="member-adder"]').siblings('tr').remove();
                     $.each(response,function(i,v){
-                        $('<tr>\
-                            <td style="display:flex"><a data-type="insert-member">\
+                        $('<tr data="olddata">\
+                            <td style="display:flex"><a data-type="delete-member" data-id="'+v.compoID+'">\
                                 <span class="icon has-text-danger">\
                                     <i class="fa fa-minus-circle is-large"></i>\
                                 </span></a>\
-                                <a data-type="update-member">\
+                                <a data-type="update-member" data-id="'+v.compoID+'">\
                                 <span class="icon has-text-warning">\
                                     <i class="fa fa-edit is-large"></i>\
                                 </span>\
@@ -51,11 +56,78 @@ if(!isset($_GET['ID'])){
                             <td>'+v.c_income+'</td>\
                         </tr>').insertBefore('tr[data-type="member-adder"]');
                     });
+
+                    $('a[data-type="delete-member"]').on('click',function(){
+                        var tr = $(this).closest('tr');
+                        $.ajax({
+                            type: "post",
+                            url: "delete-composition.php",
+                            data: {
+                                compoID:$(this).attr('data-id')
+                            },
+                            async:false,
+                            success: function (response) {
+                                if(response=='success'){
+                                    tr.remove();
+                                }
+                                
+                            }
+                        });
+                    });
+
+                    
+                    $('[data-type="update-member"]').on('click',function(){
+                        var compoID = $(this).attr('data-id')
+                        $.ajax({
+                            type: "get",
+                            url: "get-composition-unique.php?ID="+compoID,
+                            dataType: "json",
+                            async:false,
+                            success: function (response) {
+                                $('input[name="compoID"]').val(compoID);
+                                console.log($('input[name="compoID"]').val())
+                                $('input[name="name"]').val(response[0].name);
+                                $('input[name="relationship"]').val(response[0].relationship);
+                                $('input[name="c_age"]').val(response[0].c_age);
+                                $('input[name="c_civil_status"]').val(response[0].c_civil_status);
+                                $('input[name="c_occupation"]').val(response[0].c_occupation);
+                                $('input[name="c_income"]').val(response[0].c_income);
+                                $('[data-modal="updatedetail"]').addClass('is-active');
+                            }
+                        });
+
+                    });
+
                 }
-            });
+                });
+            }
+
+
+            // confirm update
+            $('#updatesubmit').on('click',function(){
+                $.ajax({
+                    type: "post",
+                    url: "update-composition.php",
+                    data: {
+                        compoID: $('input[name="compoID"]').val(),
+                        name: $('input[name="name"]').val(),
+                        relationship: $('input[name="relationship"]').val(),
+                        c_age: $('input[name="c_age"]').val(),
+                        c_civil_status: $('input[name="c_civil_status"]').val(),
+                        c_occupation: $('input[name="c_occupation"]').val(),
+                        c_income: $('input[name="c_income"]').val()
+                    },
+                    async:false,
+                    success: function (response) {
+                        refreshUI();
+                        $('[data-modal="updatedetail"]').removeClass('is-active');
+                    }
+                });
+            })
             
 
             $('a[data-type="insert-member"]').on('click',function(){
+                
                 $('<tr data-toggle="member">\
                     <td data-value="ID" get-value="<?php echo $_GET['ID']; ?>"></td>\
                     <td data-value="name" get-value="'+$('input[data-toggle="name"]').val()+'">'+ $('input[data-toggle="name"]').val() +'</td>\
@@ -68,8 +140,11 @@ if(!isset($_GET['ID'])){
                 $('tr[data-type="member-adder"] input').each(function(){
                     $(this).val("")
                 })
+                $('[data-toggle="submit"]').attr('disabled',false);
                 $('input').first().focus()
             })
+
+            
             
             $('button[data-toggle="submit"]').on('click',function(){
                 var fdata=[];
@@ -83,19 +158,21 @@ if(!isset($_GET['ID'])){
                     });
                     fdata.push(data);
                 })
-                console.log(fdata)
+                // console.log(fdata)
                 $.ajax({
                     type: "post",
                     url: "<?php echo ROOT_URL; ?>/profile/status.php",
                     data: JSON.stringify(fdata),
                     success: function (response) {
                         if(response!=""){
-                            window.print();
+                            // window.print();
                             window.location = "<?php echo ROOT_URL; ?>/profile/success.php?ID="+response;
                         }
                     }
                 });
             })
+
+            
 
         })
     </script>
@@ -197,8 +274,8 @@ if(!isset($_GET['ID'])){
                         <br>
                         <div class="columns">
                             <div class="column is-12 has-text-centered">
-                                <button data-toggle="submit" class="button is-primary">Submit</button>
-                                <a href="<?php echo ROOT_URL; ?>/profile/success.php" type="button" class="button is-link">Skip >></a>
+                                <button data-toggle="submit" class="button is-primary" disabled>Save New Record/s</button>
+                                <a href="<?php echo ROOT_URL; ?>/profile/" type="button" class="button is-link"><< Back to Members List</a>
                             </div>
                         </div>
 
@@ -210,6 +287,71 @@ if(!isset($_GET['ID'])){
         </div>
         
     </div>
+
+
+    <div class="modal" data-modal="updatedetail">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+            <p class="modal-card-title" modal-toggle="name"></p>
+            <button class="delete" aria-label="close" onclick="$('[data-modal=\'updatedetail\']').removeClass('is-active')"></button>
+            </header>
+            <section class="modal-card-body" style="overflow-x: hidden;">
+            <!-- Content ... -->
+                <div class="content">
+                    <h2 class="has-text-centered"><strong>Record Information</strong></h2>
+                    <form id="frmupdate">
+                        <input name="compoID" type="hidden" class="input">
+                        <div class="field">
+                            <div class="control">
+                                <label for="">Name</label>
+                                <input name="name" class="input">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <label for="">Relationship</label>
+                                <input name="relationship" class="input">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <label for="">Age</label>
+                                <input type="number" min="0" name="c_age" class="input">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <label for="">Civil Status</label>
+                                <input name="c_civil_status" class="input">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <label for="">Occupation</label>
+                                <input name="c_occupation" class="input">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <label for="">Income</label>
+                                <input type="number" name="c_income" class="input">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <button id="updatesubmit" type="button" class="button is-pulled-right is-link">Update</button>
+                            </div>
+                        </div>
+                    </form>
+                    
+                </div>
+            </section>
+        </div>
+    </div>
+
+
+
 
 </body>
 </html>
