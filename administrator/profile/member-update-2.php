@@ -27,6 +27,34 @@ if(!isset($_GET['ID'])){
                 }
             });
 
+            $.ajax({
+                type: "get",
+                url: "get-composition.php?ID=<?php echo $_GET['ID']; ?>",
+                dataType: "json",
+                success: function (response) {
+                    $.each(response,function(i,v){
+                        $('<tr>\
+                            <td style="display:flex"><a data-type="insert-member">\
+                                <span class="icon has-text-danger">\
+                                    <i class="fa fa-minus-circle is-large"></i>\
+                                </span></a>\
+                                <a data-type="update-member">\
+                                <span class="icon has-text-warning">\
+                                    <i class="fa fa-edit is-large"></i>\
+                                </span>\
+                            </a></td>\
+                            <td>'+v.name+'</td>\
+                            <td>'+v.relationship+'</td>\
+                            <td>'+v.c_age+'</td>\
+                            <td>'+v.c_civil_status+'</td>\
+                            <td>'+v.c_occupation+'</td>\
+                            <td>'+v.c_income+'</td>\
+                        </tr>').insertBefore('tr[data-type="member-adder"]');
+                    });
+                }
+            });
+            
+
             $('a[data-type="insert-member"]').on('click',function(){
                 $('<tr data-toggle="member">\
                     <td data-value="ID" get-value="<?php echo $_GET['ID']; ?>"></td>\
