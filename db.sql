@@ -119,7 +119,7 @@ CREATE TABLE IF NOT EXISTS `tblmember` (
   PRIMARY KEY (`ID`),
   KEY `brgyID` (`brgyID`),
   CONSTRAINT `FK_tblmember_tblbrgy` FOREIGN KEY (`brgyID`) REFERENCES `tblbrgy` (`brgyID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table dbmmis.tblmembercreatedby
@@ -134,7 +134,7 @@ CREATE TABLE IF NOT EXISTS `tblmembercreatedby` (
   KEY `userID` (`userID`),
   CONSTRAINT `FK_tblmembercreateby_tblmember` FOREIGN KEY (`memberID`) REFERENCES `tblmember` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_tblmembercreateby_tbluser` FOREIGN KEY (`userID`) REFERENCES `tbluser` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table dbmmis.tblmembercredentials
