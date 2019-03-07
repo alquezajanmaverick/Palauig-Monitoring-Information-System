@@ -26,7 +26,42 @@
                     }
                 }
             });
-        })
+        });
+
+
+
+        $('[data-trigger="issuances"]').on('click',function(){
+            var issue = $(this);
+            $('.hideable').hide();
+            $('[member-toggle="name"]').val('');
+            $('[data-modal="issuances"]').addClass('is-active');
+            $('[member-toggle="name"]').easyAutocomplete({
+                url: "<?php echo ROOT_URL; ?>/profile/get-name.php",
+                getValue: "name",
+                list: {	
+                    match: {
+                    enabled: true
+                    },
+                    onClickEvent : function(){
+                        var value = $('[member-toggle="name"]').getSelectedItemData();
+                        console.log(value);
+                        $('[member-field="name"]').text("Issue "+value.name+" a new "+issue.attr('data-string')+"?");
+                        $('[data-command="confirmPrint"]').attr('href','<?php echo ROOT_URL; ?>/issuances/issue-credential.php?ID='+value.ID+"&type="+issue.attr('data-trigger'));
+                        $('.hideable').show();
+                        // $('[credential-field="password"]').text(value.password);
+                        $('[data-command="negatePrint"]').on('click',function(){
+                            $('[member-toggle="name"]').val('');
+                            $('.hideable').hide();
+                        });
+
+                        $('[data-command="confirmPrint"]').on('click',function(){
+                            $('[data-modal="issuances"]').removeClass('is-active');
+                        })
+
+                    }
+                }
+            });
+        });
     })
 </script>
 
@@ -67,6 +102,22 @@
             <a class="navbar-item  has-text-white " href="<?php echo ROOT_URL.'/barangays'; ?>">
                 Barangays
             </a>
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link  has-text-white " href="#">
+                Issuances
+                </a>
+                <div class="navbar-dropdown is-boxed">
+                    <a class="navbar-item " data-trigger="issuances" data-string="ID" data-type="id" href="#">
+                        ID
+                    </a>
+                    <a class="navbar-item " data-trigger="issuances" data-string="Purchase Slip" data-type="slip" href="#">
+                        Purchase Slip
+                    </a>
+                    <a class="navbar-item " data-trigger="issuances" data-string="Booklet" data-type="booklet" href="#">
+                        Booklet
+                    </a>
+                </div>
+            </div>
         </div>
         
         <div class="navbar-end">
@@ -109,16 +160,7 @@
                         </div>
                     </div>
                     <br><br>
-                    <table id="tblcredential">
-                        <tr>
-                            <td><strong>Username:</strong></td>
-                            <td credential-field="username"></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Password:</strong></td>
-                            <td credential-field="password"></td>
-                        </tr>
-                    </table>
+                    
                 </div>
             </section>
             <footer class="modal-card-foot has-text-right">
@@ -130,5 +172,39 @@
                 </button> -->
                 <!-- <button class="button">Close</button> -->
             </footer>
+        </div>
+    </div>
+
+    <div class="modal" data-modal="issuances">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+            <p class="modal-card-title" modal-toggle="name"></p>
+            <button class="delete" aria-label="close" onclick="$('[data-modal=\'issuances\']').removeClass('is-active')"></button>
+            </header>
+            <section class="modal-card-body">
+            <!-- Content ... -->
+                
+                <div class="content" >
+                    <h2 class="has-text-centered"><strong>Member Search:</strong></h2>
+                    
+                    <div class="field">
+                        <div class="control">
+                           <label for="">Name:</label>
+                            <input member-toggle="name" type="text" class="input">
+                        </div>
+                    </div>
+                    <div class="field has-text-centered hideable">
+                        <h1 member-field="name"></h1>
+                        <div class="control">
+                            <div class="buttons">
+                                <a href="#" target="_blank" class="button is-primary" data-command="confirmPrint">Yes</a>
+                                <a href="#" class="button is-danger" data-command="negatePrint">No</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br><br>
+            </section>
         </div>
     </div>
