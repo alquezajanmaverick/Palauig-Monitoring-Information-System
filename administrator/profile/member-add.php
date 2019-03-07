@@ -392,7 +392,7 @@ $brgy = $db->resultset();
                         </div>
                     </div>
                     
-                </div>
+                </div> 
             </section>
         </div>
     </div>
