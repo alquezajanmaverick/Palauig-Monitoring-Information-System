@@ -122,22 +122,26 @@ $brgy = $db->resultset();
                         //video.src = window.URL.createObjectURL(stream);
                         video.srcObject = stream;
                         video.play();
+
+                        $('#snap').on('click',function(){
+                            var canvas = document.getElementById('canvas');
+                            var context = canvas.getContext('2d');
+                            var video = document.getElementById('video');
+                            context.drawImage(video, 0, 0, 300, 225);
+                            var imgUrl = canvas.toDataURL("image/png");
+                            $('#savePhoto').show();
+
+                            $('#savePhoto').on('click',function(){
+                                $('[data-entry="file"]').val(imgUrl);
+                                stream.getTracks().forEach(track => track.stop())
+                                $('[data-modal="photo"]').removeClass('is-active')
+                            })
+                        });
+                        
                     });
                 }
 
-                $('#snap').on('click',function(){
-                    var canvas = document.getElementById('canvas');
-                    var context = canvas.getContext('2d');
-                    var video = document.getElementById('video');
-                    context.drawImage(video, 0, 0, 300, 225);
-                    var imgUrl = canvas.toDataURL("image/png");
-                    $('#savePhoto').show();
-
-                    $('#savePhoto').on('click',function(){
-                        $('[data-entry="file"]').val(imgUrl);
-                        $('[data-modal="photo"]').removeClass('is-active')
-                    })
-                })
+                
                 
             });
 
