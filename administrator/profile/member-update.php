@@ -34,43 +34,21 @@ if(isset($_POST['ID']) ){
     $db->bind(14,$_POST['ID']);
     if($db->execute()){
         $id = $_POST['ID'];
-        if(isset($_FILES["file"])){
+        if(isset($_POST["blob"])){
             //upload  image file
-            $target_dir = ROOT_DIR."/profile/photo";
-            $target_file = $target_dir . basename($_FILES["file"]["name"]);
-            $uploadOk = 1;
-            $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-            // Check if image file is a actual image or fake image
-            // print_r($_FILES["file"]);
-            $check = getimagesize($_FILES["file"]["tmp_name"]);
-            if($check) {
-                if (file_exists($target_file)) {
-                    unlink($target_file);
-                    $uploadOk = 1;
-                }else{
-                    $uploadOk = 1;
-                }
-                if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" ) { 
-                    $uploadOk = 0;
-                }
-            }
-            if($uploadOk){
-                $temp = explode(".", $_FILES["file"]["name"]);
-                $newfilename = $id . '.' . end($temp);
-                // upload success
-                if(move_uploaded_file($_FILES["file"]["tmp_name"], ROOT_DIR . '/profile/photo/' . $newfilename)){
-                    
-                    $db->query("UPDATE tblmemberimg SET imgurl = ? WHERE ID = ? LIMIT 1");
-                    $db->bind(1,ROOT_URL . '/profile/photo/' . $newfilename);
-                    $db->bind(2,$id['ID']);
-                    $db->execute();
-                };
-
-
-                
-                // die();
-                header("Location:".ROOT_URL."/profile/member-update-2.php?ID=".$id);
-            }
+            $target_dir = ROOT_DIR."/profile/photo/";
+            $base_to_php = explode(',', $_POST['blob']);
+            // the 2nd item in the base_to_php array contains the content of the image
+            $data = base64_decode($base_to_php[1]);
+            $filepath = ROOT_DIR."/profile/photo/".$_POST['ID'].".png"; // or image.jpg
+        
+            // Save the image in a defined path
+            file_put_contents($filepath,$data);
+           
+            
+            // die();
+            header("Location:".ROOT_URL."/profile/member-update-2.php?ID=".$id);
+            
         }
         else{
             header("Location:".ROOT_URL."/profile/member-update-2.php?ID=".$id);
@@ -118,7 +96,55 @@ if(isset($_POST['ID']) ){
                 reader.onload = function(rEvent){
                     document.getElementById('preview').src = rEvent.target.result;
                 }
-            })
+            });
+
+            $('.file').on('click',function(e){
+                e.preventDefault();
+                $('#savePhoto').hide();
+                $('[data-modal="photo"]').addClass('is-active')
+
+                var canvas = document.getElementById('canvas');
+                var context = canvas.getContext('2d');
+                var video = document.getElementById('video');
+                context.clearRect(0, 0, 300, 325);
+
+                // Get access to the camera!
+                if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    // Not adding `{ audio: true }` since we only want video now
+                    navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+                        //video.src = window.URL.createObjectURL(stream);
+                        video.srcObject = stream;
+                        video.play();
+
+                        $('#snap').on('click',function(){
+                            var canvas = document.getElementById('canvas');
+                            var context = canvas.getContext('2d');
+                            var video = document.getElementById('video');
+                            context.drawImage(video, 0, 0, 300, 225);
+                            var imgUrl = canvas.toDataURL("image/png");
+                            $('#savePhoto').show();
+
+                            $('#savePhoto').on('click',function(){
+                                $('[data-entry="file"]').val(imgUrl);
+                                stream.getTracks().forEach(track => track.stop())
+                                $('[data-field="image"]').attr('src',imgUrl);
+                                $('[data-modal="photo"]').removeClass('is-active')
+                            });
+
+                            
+                        });
+                        
+                        $('[data-close="photo"]').on('click',function(){
+                            stream.getTracks().forEach(track => track.stop())
+                            
+                        })
+
+                    });
+                }
+
+                
+                
+            });
         })
     </script>
 </head>
@@ -182,6 +208,7 @@ if(isset($_POST['ID']) ){
                                 <div class="level-item">
                                     <div class="file is-centered is-boxed is-primary has-name">
                                         <label class="file-label">
+                                        <input type="hidden" name="blob" data-entry="file" >
                                         <input class="file-input" type="file" name="file">
                                             <span class="file-cta">
                                                 <span class="file-icon">
@@ -339,6 +366,35 @@ if(isset($_POST['ID']) ){
         </div>
         
     </div>
+
+
+    <div class="modal" data-modal="photo">
+        <div class="modal-background"></div>
+        <div class="modal-card is-6">
+            <header class="modal-card-head">
+            <p class="modal-card-title" modal-toggle="name"></p>
+            <button data-close="photo" class="delete" aria-label="close" onclick="$('[data-modal=\'photo\']').removeClass('is-active')"></button>
+            </header>
+            <section class="modal-card-body">
+            <!-- Content ... -->
+                
+                <div class="content" >
+                    <h2 class="has-text-centered"><strong>Member Photo:</strong></h2>
+                    <div class="columns">
+                        <div class="column is-6 has-text-centered">
+                            <p><video id="video" class="is-fullwidth video" id="video" autoplay width="300" height="300"></video></p>
+                            <p><button id="snap" class="button is-primary">Capture</button></p></div>
+                        <div class="column is-6 has-text-centered">
+                            <canvas class="is-fullwidth" id="canvas" width="300" height="225"></canvas>
+                            <button id="savePhoto" class="button is-link">Save</button>
+                        </div>
+                    </div>
+                    
+                </div> 
+            </section>
+        </div>
+    </div>
+
 
 </body>
 </html>
