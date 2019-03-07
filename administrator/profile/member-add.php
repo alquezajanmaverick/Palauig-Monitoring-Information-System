@@ -393,7 +393,6 @@ $brgy = $db->resultset();
                     </div>
                     
                 </div>
-                <br><br>
             </section>
         </div>
     </div>
