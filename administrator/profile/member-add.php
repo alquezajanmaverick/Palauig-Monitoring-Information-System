@@ -135,9 +135,16 @@ $brgy = $db->resultset();
                                 $('[data-entry="file"]').val(imgUrl);
                                 stream.getTracks().forEach(track => track.stop())
                                 $('[data-modal="photo"]').removeClass('is-active')
-                            })
+                            });
+
+                            
                         });
                         
+                        $('[data-close="photo"]').on('click',function(){
+                            stream.getTracks().forEach(track => track.stop())
+                            
+                        })
+
                     });
                 }
 
@@ -368,7 +375,7 @@ $brgy = $db->resultset();
         <div class="modal-card is-6">
             <header class="modal-card-head">
             <p class="modal-card-title" modal-toggle="name"></p>
-            <button class="delete" aria-label="close" onclick="$('[data-modal=\'photo\']').removeClass('is-active')"></button>
+            <button data-close="photo" class="delete" aria-label="close" onclick="$('[data-modal=\'photo\']').removeClass('is-active')"></button>
             </header>
             <section class="modal-card-body">
             <!-- Content ... -->
