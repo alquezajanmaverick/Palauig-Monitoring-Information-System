@@ -37,43 +37,28 @@ if(isset($_POST['fname']) && isset($_FILES["file"])){
         $db->execute();
 
         //upload  image file
-        $target_dir = ROOT_DIR."/profile/photo";
-        $target_file = $target_dir . basename($_FILES["file"]["name"]);
-        $uploadOk = 1;
-        $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-        // Check if image file is a actual image or fake image
-        // print_r($_FILES["file"]);
-        $check = getimagesize($_FILES["file"]["tmp_name"]);
-        if($check) {
-            if (file_exists($target_file)) {
-                $uploadOk = 0;
-            }else{
-                $uploadOk = 1;
-            }
-            if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" ) { 
-                $uploadOk = 0;
-            }
-        }
-        if($uploadOk){
-            $temp = explode(".", $_FILES["file"]["name"]);
-            $newfilename = $id['ID'] . '.' . end($temp);
-            // upload success
-            if(move_uploaded_file($_FILES["file"]["tmp_name"], ROOT_DIR . '/profile/photo/' . $newfilename)){
-                
-                $db->query("INSERT into tblmemberimg(ID,imgurl)VALUES(?,?)");
-                $db->bind(1,$id['ID']);
-                $db->bind(2,ROOT_URL . '/profile/photo/' . $newfilename);
-                $db->execute();
-            };
+        $target_dir = ROOT_DIR."/profile/photo/";
+        $base_to_php = explode(',', $_POST['blob']);
+        // the 2nd item in the base_to_php array contains the content of the image
+        $data = base64_decode($base_to_php[1]);
+        $filepath = ROOT_DIR."/profile/photo/".$id['ID'].".png"; // or image.jpg
+    
+        // Save the image in a defined path
+        file_put_contents($filepath,$data);
 
+        $db->query("INSERT into tblmemberimg(ID,imgurl)VALUES(?,?)");
+        $db->bind(1,$id['ID']);
+        $db->bind(2,ROOT_URL . '/profile/photo/' . $id['ID'].".png");
+        $db->execute();
+   
 
-            $db->query("INSERT INTO tblmembercreatedby(memberID,userID,created_at)VALUES(?,?,NOW())");
-            $db->bind(1,$id['ID']);
-            $db->bind(2,$_SESSION['ID']);
-            $db->execute();
-            
-            header("Location:".ROOT_URL."/profile/member-add-2.php?ID=".$id['ID']);
-        }
+        $db->query("INSERT INTO tblmembercreatedby(memberID,userID,created_at)VALUES(?,?,NOW())");
+        $db->bind(1,$id['ID']);
+        $db->bind(2,$_SESSION['ID']);
+        $db->execute();
+        
+        header("Location:".ROOT_URL."/profile/member-add-2.php?ID=".$id['ID']);
+  
     }
 
 }
@@ -119,6 +104,51 @@ $brgy = $db->resultset();
                 position: "bottom-right",
                 animate: { in: "fadeInRight", out: "fadeOutRight" }
             });
+
+            $('.file').on('click',function(e){
+                e.preventDefault();
+                $('#savePhoto').hide();
+                $('[data-modal="photo"]').addClass('is-active')
+
+                var canvas = document.getElementById('canvas');
+                var context = canvas.getContext('2d');
+                var video = document.getElementById('video');
+                context.clearRect(0, 0, 300, 325);
+
+                // Get access to the camera!
+                if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    // Not adding `{ audio: true }` since we only want video now
+                    navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+                        //video.src = window.URL.createObjectURL(stream);
+                        video.srcObject = stream;
+                        video.play();
+                    });
+                }
+
+                $('#snap').on('click',function(){
+                    var canvas = document.getElementById('canvas');
+                    var context = canvas.getContext('2d');
+                    var video = document.getElementById('video');
+                    context.drawImage(video, 0, 0, 300, 225);
+                    var imgUrl = canvas.toDataURL("image/png");
+                    $('#savePhoto').show();
+
+                    $('#savePhoto').on('click',function(){
+                        $('[data-entry="file"]').val(imgUrl);
+                        $('[data-modal="photo"]').removeClass('is-active')
+                    })
+                })
+                
+            });
+
+            $('#xForm').on('submit',function(e){
+                if($('[data-entry="file"]').val() == ''){
+                    e.preventDefault();
+                    alert("Take a Photo first!");
+                }
+            });
+
+
         })
     </script>
 </head>
@@ -171,17 +201,18 @@ $brgy = $db->resultset();
 
                 <div class="box addnew">
                         <h1 class="title has-text-centered">Membership Form</h1>
-                        <form method="post" enctype="multipart/form-data">
+                        <form id="xForm" method="post" enctype="multipart/form-data">
                         <div class="field">
                             <div class="file is-centered is-boxed is-primary has-name">
                                 <label class="file-label">
-                                <input class="file-input" type="file" name="file" required>
+                                <input type="hidden" name="blob" data-entry="file" >
+                                <input class="file-input" type="file" name="file" accept="image/*" capture>
                                     <span class="file-cta">
                                         <span class="file-icon">
                                         <i class="fa fa-user-circle"></i>
                                         </span>
                                         <span class="file-label">
-                                            Upload Member Image
+                                            Snap Member Photo
                                         </span>
                                     </span>
                                 </label>
@@ -326,6 +357,36 @@ $brgy = $db->resultset();
         </div>
         
     </div>
+
+
+    <div class="modal" data-modal="photo">
+        <div class="modal-background"></div>
+        <div class="modal-card is-6">
+            <header class="modal-card-head">
+            <p class="modal-card-title" modal-toggle="name"></p>
+            <button class="delete" aria-label="close" onclick="$('[data-modal=\'photo\']').removeClass('is-active')"></button>
+            </header>
+            <section class="modal-card-body">
+            <!-- Content ... -->
+                
+                <div class="content" >
+                    <h2 class="has-text-centered"><strong>Member Photo:</strong></h2>
+                    <div class="columns">
+                        <div class="column is-6 has-text-centered">
+                            <p><video id="video" class="is-fullwidth video" id="video" autoplay width="300" height="300"></video></p>
+                            <p><button id="snap" class="button is-primary">Capture</button></p></div>
+                        <div class="column is-6 has-text-centered">
+                            <canvas class="is-fullwidth" id="canvas" width="300" height="225"></canvas>
+                            <button id="savePhoto" class="button is-link">Save</button>
+                        </div>
+                    </div>
+                    
+                </div>
+                <br><br>
+            </section>
+        </div>
+    </div>
+
 
 </body>
 </html>
