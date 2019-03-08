@@ -12,6 +12,7 @@ require_once(ROOT_DIR.'/connector.php');
     <?php include(ROOT_DIR."/imports.php"); ?>
     <script>
         $(document).ready(function(){
+            $('[data-target="print"]').hide();
             var limit = 10;
             var offset = 0;
             var count =0;
@@ -90,6 +91,23 @@ require_once(ROOT_DIR.'/connector.php');
                         $('nav.pagination a').remove();
                         $('ul.pagination-list li').remove();
                         console.table(data)
+
+                        // display print button
+                        if(data.length>0){
+                            $('[data-target="print"]').show();
+                        }else{
+                            $('[data-target="print"]').hide();
+                        }
+
+                        bulmaToast.toast({ 
+                            message: data.length+" Members Found.", 
+                            type: "is-primary",
+                            dismissible:true,
+                            animate: { in: "fadeIn", out: "fadeOut" },
+                            position: 'bottom-right',
+                            duration:5000
+                        });
+
                         $(data).each(function(index,value){
                             $('tbody#memberlist').append('\
                             <tr data-status="'+value.status+'">\
@@ -152,6 +170,16 @@ require_once(ROOT_DIR.'/connector.php');
                                 $(this).addClass("has-text-white");
                             }
                         });
+
+
+
+                        // PRINT button
+                        $('[data-target="print"]').on('click',function(){
+                            let json = JSON.stringify(data);
+                            let jsonbase = window.btoa(json);
+                            window.open('print.php?json='+jsonbase+"&brgy="+$('#brgyselect option:selected').text());
+
+                        })
                         
                     }
                 });
@@ -349,7 +377,7 @@ require_once(ROOT_DIR.'/connector.php');
                                 <th>Occupation</th>
                                 <th>Income</th>
                                 <th>Skills</th>
-                                <th></th>
+                                <th><a href="#" data-target="print" class="button is-link"><span class="icon"><i class="fa fa-print"></i></span><span>Print</span></a></th>
                             </thead>
                             <tbody id="memberlist">
                             </tbody>
