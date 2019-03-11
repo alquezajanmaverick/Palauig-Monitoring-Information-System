@@ -70,6 +70,27 @@ require_once("../access.php");
                 });
             }
 
+            function fetchseniorloggedin(){
+                $.ajax({
+                    type: "get",
+                    url: "api/get-senior-logged-in.php",
+                    dataType: "json",
+                    success: function (response) {
+                        $('#tblseniorloggedin>tbody *').remove();
+                        $.each(response,function(i,v){
+                            $('#tblseniorloggedin>tbody').append('\
+                                <tr>\
+                                    <td class="has-text-white is-size-7">'+ v.User +'</td>\
+                                    <td class="has-text-white has-text-right is-size-7">'+ moment(v.LoggedAt,"YYYY-MM-DD HH:mm:ss").format("MMM Do, YYYY hh:mm A") +'</td>\
+                                </tr>\
+                            ');
+                        });
+
+                        
+                    }
+                });
+            }
+
             // delete button
             $('#tbladminlist>tbody').on('click','button[admin-toggle="delete"]',function(){
                 let id = $(this).attr('admin-delete-id');
@@ -279,11 +300,7 @@ require_once("../access.php");
                 return false;
             });
 
-            
-
-            fetchadmin();
-            fetchadminloggedin();
-            
+            // auto-update admin loggedin
             $('[data-trigger="adminupdate"]').on('click',function(){
                 var span = $(this).find('span');
                 if(span.hasClass('has-text-danger')){
@@ -292,10 +309,10 @@ require_once("../access.php");
                         fetchadminloggedin()
                     }, 3000);
                     $(this).attr('title','auto-update is turned on.');
-                    span.addClass('has-text-success');
+                    span.addClass('has-text-link');
                     $('a[data-trigger="adminforceupdate"]').attr('disabled','disabled');
                 }else{
-                    span.removeClass('has-text-success');
+                    span.removeClass('has-text-link');
                     clearInterval(admininterval);
                     fetchadminloggedin();
                     $(this).attr('title','auto-update is turned off.');
@@ -304,8 +321,39 @@ require_once("../access.php");
                 }
             });
             $('a[data-trigger="adminforceupdate"]').on('click',function(){
-                fetchadmin();
+                fetchadminloggedin();
             })
+
+            // auto-update senior loggedin
+            $('[data-trigger="seniorupdate"]').on('click',function(){
+                var span = $(this).find('span');
+                if(span.hasClass('has-text-danger')){
+                    span.removeClass('has-text-danger');
+                    admininterval = setInterval(function(){
+                        fetchseniorloggedin()
+                    }, 3000);
+                    $(this).attr('title','auto-update is turned on.');
+                    span.addClass('has-text-link');
+                    $('a[data-trigger="seniorforceupdate"]').attr('disabled','disabled');
+                }else{
+                    span.removeClass('has-text-link');
+                    clearInterval(admininterval);
+                    fetchseniorloggedin();
+                    $(this).attr('title','auto-update is turned off.');
+                    span.addClass('has-text-danger');
+                    $('a[data-trigger="seniorforceupdate"]').removeAttr('disabled');
+                }
+            });
+            $('a[data-trigger="senioforceupdate"]').on('click',function(){
+                fetchseniorloggedin();
+            })
+
+
+            fetchadmin();
+            fetchseniorloggedin();
+            fetchadminloggedin();
+            
+            
         })
     </script>
 </head>
@@ -354,19 +402,30 @@ require_once("../access.php");
                 <div class="tile is-parent is-vertical">
 
                     <article class="tile is-child notification is-primary">
-                    <p class="title">Currently Logged-in</p>
-                    <p class="subtitle">Senior Citizen</p>
-                    <!-- <p class="subtitle">Top tile</p> -->
+                        <p class="title is-size-4">Currently Logged-in</p>
+                        <p class="subtitle">Senior Citizen
+                            <a data-trigger="seniorforceupdate" class="is-pulled-right button is-small is-primary" title="Single Refresh.">Force Refresh</a>
+                            <a data-trigger="seniorupdate" title="auto-update is turned off."><span class="icon has-text-danger is-pulled-right"><i class="fa fa-refresh"></i></span></a>
+                        </p>
+                        <div class="content" style="overflow-y: auto;height: 20vh;padding-right: 10px; margin-right: -25px;">
+                            <table id="tblseniorloggedin" class="table is-narrow it-fullwidth" style="background:transparent">
+                                <thead class="has-text-white">
+                                    <th class="has-text-white">Member</th>
+                                    <th class="has-text-right has-text-white">Date-Time Logged In</th>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
                     </article>
 
                     <!-- Currently Logged in Administrators -->
                     <article class="tile is-child notification is-warning">
-                    <p class="title">Currently Logged-in</p>
-                    <p class="subtitle">Administrator 
-                        <a data-trigger="adminforceupdate" class="is-pulled-right button is-small is-warning" title="Single Refresh.">Force Refresh</a>
-                        <a data-trigger="adminupdate" title="auto-update is turned off."><span class="icon has-text-danger is-pulled-right"><i class="fa fa-refresh"></i></span></a>
-                    </p>
-                    <!-- <p class="subtitle">Bottom tile</p> -->
+                        <p class="title is-size-4">Currently Logged-in</p>
+                        <p class="subtitle">Administrator 
+                            <a data-trigger="adminforceupdate" class="is-pulled-right button is-small is-warning" title="Single Refresh.">Force Refresh</a>
+                            <a data-trigger="adminupdate" title="auto-update is turned off."><span class="icon has-text-danger is-pulled-right"><i class="fa fa-refresh"></i></span></a>
+                        </p>
                         <div class="content" style="overflow-y: auto;height: 30vh;padding-right: 10px; margin-right: -25px;">
                             <table id="tbladminloggedin" class="table is-narrow it-fullwidth" style="background:transparent">
                                 <thead class="has-text-white">
