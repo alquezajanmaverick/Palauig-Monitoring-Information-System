@@ -52,6 +52,15 @@ CREATE TABLE `memberview` (
 	`status` VARCHAR(50) NULL COLLATE 'utf8_general_ci'
 ) ENGINE=MyISAM;
 
+-- Dumping structure for view dbmmis.seniorloggedinview
+DROP VIEW IF EXISTS `seniorloggedinview`;
+-- Creating temporary table to overcome VIEW dependency errors
+CREATE TABLE `seniorloggedinview` (
+	`ID` INT(11) NOT NULL,
+	`User` VARCHAR(101) NOT NULL COLLATE 'utf8_general_ci',
+	`LoggedAt` DATETIME NULL
+) ENGINE=MyISAM;
+
 -- Dumping structure for table dbmmis.tblbrgy
 DROP TABLE IF EXISTS `tblbrgy`;
 CREATE TABLE IF NOT EXISTS `tblbrgy` (
@@ -119,7 +128,7 @@ CREATE TABLE IF NOT EXISTS `tblmember` (
   PRIMARY KEY (`ID`),
   KEY `brgyID` (`brgyID`),
   CONSTRAINT `FK_tblmember_tblbrgy` FOREIGN KEY (`brgyID`) REFERENCES `tblbrgy` (`brgyID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table dbmmis.tblmembercreatedby
@@ -134,7 +143,7 @@ CREATE TABLE IF NOT EXISTS `tblmembercreatedby` (
   KEY `userID` (`userID`),
   CONSTRAINT `FK_tblmembercreateby_tblmember` FOREIGN KEY (`memberID`) REFERENCES `tblmember` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_tblmembercreateby_tbluser` FOREIGN KEY (`userID`) REFERENCES `tbluser` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table dbmmis.tblmembercredentials
@@ -196,9 +205,17 @@ CREATE TABLE IF NOT EXISTS `tbluser` (
   `password` varchar(50) NOT NULL,
   `fullname` varchar(50) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
+-- Dumping structure for view dbmmis.userloggedinview
+DROP VIEW IF EXISTS `userloggedinview`;
+-- Creating temporary table to overcome VIEW dependency errors
+CREATE TABLE `userloggedinview` (
+	`User` VARCHAR(50) NOT NULL COLLATE 'utf8_general_ci',
+	`LoggedAt` DATETIME NULL
+) ENGINE=MyISAM;
+
 -- Dumping structure for view dbmmis.credentialview
 DROP VIEW IF EXISTS `credentialview`;
 -- Removing temporary table and create final VIEW structure
@@ -215,6 +232,32 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 LEFT JOIN tblmemberimg i ON i.ID = m.ID
 LEFT JOIN tblmemberstatus s ON s.ID = m.ID 
 LEFT JOIN tblbrgy as b ON b.brgyID = m.brgyID ;
+
+-- Dumping structure for view dbmmis.seniorloggedinview
+DROP VIEW IF EXISTS `seniorloggedinview`;
+-- Removing temporary table and create final VIEW structure
+DROP TABLE IF EXISTS `seniorloggedinview`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `seniorloggedinview` AS SELECT
+	m.ID as ID,CONCAT(m.fname,' ',m.lname) AS User,
+	l.datelogged AS LoggedAt 
+FROM
+	tblloggedinsenior AS l
+	INNER JOIN tblmember AS m ON m.ID = l.userID 
+ORDER BY
+	l.datelogged DESC ;
+
+-- Dumping structure for view dbmmis.userloggedinview
+DROP VIEW IF EXISTS `userloggedinview`;
+-- Removing temporary table and create final VIEW structure
+DROP TABLE IF EXISTS `userloggedinview`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `userloggedinview` AS SELECT
+	u.fullname AS User,
+	l.datelogged AS LoggedAt 
+FROM
+	tblloggedinuser AS l
+	INNER JOIN tbluser AS u ON u.ID = l.userID 
+ORDER BY
+	l.datelogged DESC ;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
