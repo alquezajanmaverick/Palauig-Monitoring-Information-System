@@ -187,50 +187,54 @@ require_once(ROOT_DIR.'/connector.php');
 
                 $('a[data-button="deceased"]').on('click',function(){
                     var $this = $(this);
-                    $.ajax({
-                        type: "get",
-                        url: "<?php echo ROOT_URL; ?>/profile/set-activation.php?mode=deactivate&ID="+$(this).attr("data-id"),
-                        success: function (response) {
-                            $($this).closest('td').closest('tr').removeClass("has-background-primary");
-                            $($this).closest('td').closest('tr').addClass("has-background-danger");
+                    if(confirm('are you sure you to deactivated record?')){
+                        $.ajax({
+                            type: "get",
+                            url: "<?php echo ROOT_URL; ?>/profile/set-activation.php?mode=deactivate&ID="+$(this).attr("data-id"),
+                            success: function (response) {
+                                $($this).closest('td').closest('tr').removeClass("has-background-primary");
+                                $($this).closest('td').closest('tr').addClass("has-background-danger");
 
-                            $($this).siblings('a').show();
-                            $($this).hide();
+                                $($this).siblings('a').show();
+                                $($this).hide();
 
-                            bulmaToast.toast({
-                                message: "Record "+response+".",
-                                type: "is-success",
-                                duration: 5000,
-                                dismissible: false,
-                                position: "bottom-right",
-                                animate: { in: "fadeInRight", out: "fadeOutRight" }
-                            });
-                        }
-                    });
+                                bulmaToast.toast({
+                                    message: "Record "+response+".",
+                                    type: "is-success",
+                                    duration: 5000,
+                                    dismissible: false,
+                                    position: "bottom-right",
+                                    animate: { in: "fadeInRight", out: "fadeOutRight" }
+                                });
+                            }
+                        });
+                    }
                 });
 
                 $('a[data-button="activate"]').on('click',function(){
                     var $this = $(this);
-                    $.ajax({
-                        type: "get",
-                        url: "<?php echo ROOT_URL; ?>/profile/set-activation.php?mode=activate&ID="+$(this).attr("data-id"),
-                        success: function (response) {
-                            $($this).closest('td').closest('tr').removeClass("has-background-danger");
-                            $($this).closest('td').closest('tr').addClass("has-background-primary");
+                    if(confirm('are you sure you to activated record?')){
+                        $.ajax({
+                            type: "get",
+                            url: "<?php echo ROOT_URL; ?>/profile/set-activation.php?mode=activate&ID="+$(this).attr("data-id"),
+                            success: function (response) {
+                                $($this).closest('td').closest('tr').removeClass("has-background-danger");
+                                $($this).closest('td').closest('tr').addClass("has-background-primary");
 
-                            $($this).siblings('a').show();
-                            $($this).hide();
+                                $($this).siblings('a').show();
+                                $($this).hide();
 
-                            bulmaToast.toast({
-                                message: "Record "+response+".",
-                                type: "is-success",
-                                duration: 5000,
-                                dismissible: false,
-                                position: "bottom-right",
-                                animate: { in: "fadeInRight", out: "fadeOutRight" }
-                            });
-                        }
-                    });
+                                bulmaToast.toast({
+                                    message: "Record "+response+".",
+                                    type: "is-success",
+                                    duration: 5000,
+                                    dismissible: false,
+                                    position: "bottom-right",
+                                    animate: { in: "fadeInRight", out: "fadeOutRight" }
+                                });
+                            }
+                        });
+                    }
                 });
 
                 // $('[data-trigger="search"]').on('click',function(){

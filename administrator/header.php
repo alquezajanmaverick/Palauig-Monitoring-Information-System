@@ -32,6 +32,7 @@
 
         $('[data-trigger="issuances"]').on('click',function(){
             var issue = $(this);
+            var datatype = issue.attr('data-type');
             $('.hideable').hide();
             $('[member-toggle="name"]').val('');
             $('[data-modal="issuances"]').addClass('is-active');
@@ -46,7 +47,19 @@
                         var value = $('[member-toggle="name"]').getSelectedItemData();
                         console.log(value);
                         $('[member-field="name"]').text("Issue "+value.name+" a new "+issue.attr('data-string')+"?");
-                        $('[data-command="confirmPrint"]').attr('href','<?php echo ROOT_URL; ?>/issuances/issue-credential.php?ID='+value.ID+"&type="+issue.attr('data-trigger'));
+                        
+                        
+                        if(datatype == 'id'){
+                            $('[data-command="confirmPrint"]').attr('data-confirm','ID');
+                            $('[data-command="confirmPrint"]').attr('data','<?php echo ROOT_URL; ?>/issuances/issue-ID.php?ID='+value.ID+"&type="+issue.attr('data-trigger'));
+                        }else if(datatype == 'slip'){
+                            $('[data-command="confirmPrint"]').attr('data-confirm','slip');
+                            $('[data-command="confirmPrint"]').attr('data','<?php echo ROOT_URL; ?>/issuances/issue-slip.php?ID='+value.ID+"&type="+issue.attr('data-trigger'));
+                        
+                        }else if(datatype == 'booklet'){
+                            $('[data-command="confirmPrint"]').attr('data-confirm','booklet');
+                            $('[data-command="confirmPrint"]').attr('data','<?php echo ROOT_URL; ?>/issuances/issue-booklet.php?ID='+value.ID+"&type="+issue.attr('data-trigger'));
+                        }
                         $('.hideable').show();
                         // $('[credential-field="password"]').text(value.password);
                         $('[data-command="negatePrint"]').on('click',function(){
@@ -55,6 +68,7 @@
                         });
 
                         $('[data-command="confirmPrint"]').on('click',function(){
+                            window.open($(this).attr('data'));
                             $('[data-modal="issuances"]').removeClass('is-active');
                         })
 
@@ -62,6 +76,8 @@
                 }
             });
         });
+
+        
     })
 </script>
 
@@ -198,7 +214,7 @@
                         <h1 member-field="name"></h1>
                         <div class="control">
                             <div class="buttons">
-                                <a href="#" target="_blank" class="button is-primary" data-command="confirmPrint">Yes</a>
+                                <a href="#" class="button is-primary" data-target="ID" data-command="confirmPrint">Yes</a>
                                 <a href="#" class="button is-danger" data-command="negatePrint">No</a>
                             </div>
                         </div>

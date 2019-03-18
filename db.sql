@@ -11,12 +11,6 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
-
--- Dumping database structure for dbmmis
-DROP DATABASE IF EXISTS `dbmmis`;
-CREATE DATABASE IF NOT EXISTS `dbmmis` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `dbmmis`;
-
 -- Dumping structure for view dbmmis.credentialview
 DROP VIEW IF EXISTS `credentialview`;
 -- Creating temporary table to overcome VIEW dependency errors

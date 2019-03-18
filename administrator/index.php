@@ -6,7 +6,7 @@ $db = new DatabaseConnect();
 $error="";
 $marker = "is-info";
 if(isset($_POST['username'])){
-    $db->query("SELECT * FROM tbluser WHERE username = ? AND password = ? LIMIT 1");
+    $db->query("SELECT * FROM tbluser WHERE username = BINARY(?) AND password = BINARY(?) LIMIT 1");
     $db->bind(1,$_POST['username']);
     $db->bind(2,$_POST['password']);
     $x = $db->single();
